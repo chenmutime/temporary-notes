@@ -1,10 +1,13 @@
 
 export { }
 
-chrome.contextMenus.create({
-    "id": "RecordQuickly",
-    "title": "快速记录",
-    "contexts": ["selection"]
+
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.contextMenus.create({
+        "id": "RecordQuickly",
+        "title": "快速记录",
+        "contexts": ["selection"]
+    });
 });
 
 chrome.contextMenus.onClicked.addListener(function (info) {
@@ -19,3 +22,8 @@ chrome.contextMenus.onClicked.addListener(function (info) {
         top: 500
     });
 });
+
+
+chrome.sidePanel
+    .setPanelBehavior({ openPanelOnActionClick: true })
+    .catch((error) => console.error(error));

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
-
+let inputText: string;
 // 获取URL中的查询参数
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -16,8 +16,26 @@ if (subSelectedText !== null && subSelectedText?.length > 120) {
 
 document.addEventListener('keydown', function (event) {
   if (event.ctrlKey && event.key === 'Enter') {
+    let key = 'text_list';
+    let content = {
+      selected_text: selectedText,
+      url: url,
+      input_text: inputText
+    };
     // 保存选中的文本内容到本地缓存
-    chrome.storage.local.set({ selectedText: subSelectedText }, function () {
+    chrome.storage.local.get(['text_list'], function (result)  {
+      let contentList: object[] = [];
+      if (result['text_list'] === undefined) {
+        contentList[0] = content;
+      } else {
+        // 更新选中的文本内容
+        contentList = result['text_list'];
+        contentList[contentList.length] = content;
+      }
+
+      chrome.storage.local.set({ 'text_list': contentList }, function () {
+        console.info('保存成功');
+      });
       // 关闭浮窗
       window.close();
     });
@@ -30,7 +48,7 @@ document.addEventListener('keydown', function (event) {
   <!-- 定义一个面板，位于屏幕正中央 -->
   <main>
     <p>{{ subSelectedText }}</p>
-    <textarea placeholder="Enter your thoughts"></textarea>
+    <textarea v-model="inputText" placeholder="Enter your thoughts"></textarea>
   </main>
 </template>
 

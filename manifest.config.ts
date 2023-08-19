@@ -19,7 +19,8 @@ export default defineManifest(async (env) => ({
   manifest_version: 3,
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
-    default_popup: 'src/popup/index.html',
+    // default_popup: 'src/popup/index.html',
+    default_title: 'To open your snippet list',
   },
   background: {
     service_worker: 'src/background/index.ts',
@@ -33,11 +34,10 @@ export default defineManifest(async (env) => ({
     },
   ],
   side_panel: {
-    default_path: 'src/pages/sidepanel/sidepanel.html',
+    default_path: '/src/pages/sidepanel/sidepanel.html',
   },
   host_permissions: ['*://*/*'],
   options_page: 'src/options/index.html',
-  permissions: ['storage', 'contextMenus', 'sidePanel'],
   web_accessible_resources: [
     {
       matches: ['*://*/*'],
@@ -48,4 +48,5 @@ export default defineManifest(async (env) => ({
       resources: ['src/content-script/iframe/index.html'],
     },
   ],
+  permissions: ['storage', 'contextMenus', 'sidePanel'],
 }))
