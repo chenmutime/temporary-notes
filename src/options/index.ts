@@ -1,17 +1,4 @@
 import { createApp } from 'vue'
-import { createRouter, createWebHashHistory } from 'vue-router'
-import routes from '~pages'
-import '../assets/base.scss'
-import App from './app.vue'
-import './index.scss'
-
-const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
-  routes,
-})
-
-router.beforeEach((to) => {
-  if (to.path === '/') return '/options'
-})
-
-createApp(App).use(router).mount('#app')
+import App from './pages/index.vue'
+// 调用createApp函数，创建Popup.vue应用，并挂载到具有id为'app'的HTML元素上（popup.html中的div）
+createApp(App).mount('#app')

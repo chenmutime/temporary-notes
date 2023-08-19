@@ -1,24 +1,61 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { h, ref } from 'vue'
+
+// 获取URL中的查询参数
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+// 获取传递的值
+const selectedText = urlParams.get('selectedText');
+const url = urlParams.get('url');
+console.info(url);
+// 截取选中的文本
+var subSelectedText = selectedText;
+if (subSelectedText !== null && subSelectedText?.length > 120) {
+  subSelectedText = subSelectedText?.substring(0, 120) + '...';
+}
+
+document.addEventListener('keydown', function (event) {
+  if (event.ctrlKey && event.key === 'Enter') {
+    // 保存选中的文本内容到本地缓存
+    chrome.storage.local.set({ selectedText: subSelectedText }, function () {
+      // 关闭浮窗
+      window.close();
+    });
+
+  }
+});
+</script>
 
 <template>
-  <div class="text-center m-4">
-    <h1 class="text-3xl font-bold underline pb-6">Hello world from Options!</h1>
-
-    <RouterLink to="/about">About</RouterLink>
-  </div>
+  <!-- 定义一个面板，位于屏幕正中央 -->
+  <main>
+    <p>{{ subSelectedText }}</p>
+    <textarea placeholder="Enter your thoughts"></textarea>
+  </main>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+main {
+  width: 100%;
+  height: 150px;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+textarea {
+  width: 96%;
+  height: 130px;
+  border: 1px solid #ccc;
+  padding: 0.1em;
+  resize: none;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+p {
+  padding: 0.1em;
+  font-size: small;
+  font-display: block;
+  color: #9a9797;
+  text-align: left;
 }
 </style>

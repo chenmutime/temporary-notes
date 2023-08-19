@@ -32,9 +32,12 @@ export default defineManifest(async (env) => ({
       run_at: 'document_end',
     },
   ],
+  side_panel: {
+    default_path: 'src/pages/sidepanel/sidepanel.html',
+  },
   host_permissions: ['*://*/*'],
   options_page: 'src/options/index.html',
-  permissions: ['storage', 'activeTab', 'identity'],
+  permissions: ['storage', 'contextMenus', 'sidePanel'],
   web_accessible_resources: [
     {
       matches: ['*://*/*'],
