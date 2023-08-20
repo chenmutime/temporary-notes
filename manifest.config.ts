@@ -48,5 +48,5 @@ export default defineManifest(async (env) => ({
       resources: ['src/content-script/iframe/index.html'],
     },
   ],
-  permissions: ['storage', 'contextMenus', 'sidePanel'],
+  permissions: ['storage', 'contextMenus', 'sidePanel', 'tabs'],
 }))

@@ -40,7 +40,7 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
         const savedResult = await chrome.storage.local.get(['text_list']);
         console.info("Send data: " + JSON.stringify(savedResult));
         const savedData = savedResult['text_list'];
-        if (savedData !== undefined && JSON.stringify(savedData) !== '[null]') {
+        if (savedData !== undefined) {
             console.info("Ready to send data: " + JSON.stringify(savedData));
             sendResponse({
                 status: 'success',
