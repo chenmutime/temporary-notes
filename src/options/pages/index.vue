@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { randomUUID } from 'crypto';
 import { h, ref } from 'vue'
 
 let inputText: string;
@@ -17,12 +18,13 @@ if (viewSelectedText !== null && viewSelectedText?.length > 120) {
 document.addEventListener('keydown', function (event) {
   if (event.ctrlKey && event.key === 'Enter') {
     let content = {
+      id: randomUUID.toString,
       selected_text: selectedText,
       url: url,
-      input_text: inputText
+      input_text: inputText,
+      timestamp: new Date().getTime()
     };
     // 将selectedText和url发送到background.js
-    console.info('发送消息：' + JSON.stringify(content));
     chrome.runtime.sendMessage({ save_data: content }).then(function (response) {
       console.info('消息响应：' + JSON.stringify(response));
     });

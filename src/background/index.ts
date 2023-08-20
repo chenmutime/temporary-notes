@@ -37,7 +37,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         sendResponse({
             status: 'success'
         });
-    } 
+    } else if (request.clear_data) {
+        if (request.clear_all === true){
+            chrome.storage.local.clear();
+        } else {
+            chrome.storage.local.remove(request.clear_data);
+        }
+    }
 });
 
 function saveData(content: object) {
