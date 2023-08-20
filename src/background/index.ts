@@ -1,3 +1,4 @@
+import { json } from "stream/consumers";
 
 export { }
 
@@ -29,25 +30,14 @@ chrome.sidePanel
     .catch((error) => console.error(error));
 
 // 接收来自其他js页面发送过来的消息
-chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log("receive: " + JSON.stringify(request));
     if (request.save_data) {
         saveData(request.save_data);
         sendResponse({
             status: 'success'
         });
-    } else if (request.fetch_data) {
-        const savedResult = await chrome.storage.local.get(['text_list']);
-        console.info("Send data: " + JSON.stringify(savedResult));
-        const savedData = savedResult['text_list'];
-        if (savedData !== undefined) {
-            console.info("Ready to send data: " + JSON.stringify(savedData));
-            sendResponse({
-                status: 'success',
-                data: savedData
-            });
-        }
-    }
+    } 
 });
 
 function saveData(content: object) {
@@ -61,7 +51,6 @@ function saveData(content: object) {
             contentList = result['text_list'];
             contentList[contentList.length] = content;
         }
-        console.info("Save data: " + JSON.stringify(contentList));
         chrome.storage.local.set({ text_list: contentList }).then(function () {
             console.log('数据成功落库！');
         });

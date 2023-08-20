@@ -4,15 +4,12 @@ let contentList: object[] = [];
 fetchData();
 
 function fetchData() {
-    chrome.runtime.sendMessage({ fetch_data: true }).then(function (response) {
-        console.info('消息响应：' + JSON.stringify(response));
-        if (response !== undefined && response.status === 'success') {
-            contentList = response.data;
-
-            const listNode = document.getElementById('id_list');
-            if (listNode) {
-                listNode.innerHTML = JSON.stringify(contentList);
-            }
+    chrome.storage.local.get(["text_list"]).then((result) => {
+        contentList = result['text_list'];
+        console.log("Value currently is " + JSON.stringify(contentList));
+        const listNode = document.getElementById('id_list');
+        if (listNode) {
+            listNode.innerHTML = JSON.stringify(contentList);
         }
     });
 }
