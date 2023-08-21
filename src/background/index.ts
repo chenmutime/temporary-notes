@@ -68,19 +68,27 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
+// {'www.baidu.com': [{}{}]}
 function saveData(content: object) {
     // 保存选中的文本内容到本地缓存
     chrome.storage.local.get(['text_list'], result => {
-        let contentList: object[] = [];
-        if (result['text_list'] === undefined) {
-            contentList[0] = content;
-        } else {
-            // 更新选中的文本内容
-            contentList = result['text_list'];
-            contentList[contentList.length] = content;
+        let snnipetObject: object = result['text_list'];
+        if (snnipetObject !== undefined) {
+            let contentList: object[] = snnipetObject[content.url];
+            if (contentList === undefined) {
+                contentList = [];
+            }
+            contentList.push(content);
+            snnipetObject[content.url] = contentList;
+        } else { 
+            snnipetObject = {};
+            let contentList: object[] = [content];
+            snnipetObject[content.url] = contentList;
         }
-        chrome.storage.local.set({ text_list: contentList }).then(function () {
+        console.info('snnipetObject'+JSON.stringify(snnipetObject));
+        chrome.storage.local.set({ text_list: snnipetObject }).then(function () {
             console.log('数据成功落库！');
         });
     });
 }
+
