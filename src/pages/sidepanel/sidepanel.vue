@@ -1,50 +1,46 @@
 <script setup lang="ts">
+import { reactive } from 'vue'
 
-let contentList: object[] = [];
+let contentContainer = reactive({ contentList: []});
 fetchData();
 
 function fetchData() {
     chrome.storage.local.get(["text_list"]).then((result) => {
-        if(result !== undefined) {
-            contentList = result['text_list'];
-            console.info('获取历史记录：'+JSON.stringify(contentList));
-            const listNode = document.getElementById('id_list');
-            if (listNode && contentList !== undefined) {
-                if (contentList.length > 0) {
-                    let renderViewContent: string = '';
-                    for (let i = 0; i < contentList.length; i++) {
-                        let selectedText = contentList[i].selected_text;
-                        let renderContent:string = '<p>' + selectedText + '</p>';
-                        renderViewContent += renderContent;
-                    }
-                    listNode.innerHTML = renderViewContent;
-                } else {
-                    listNode.innerHTML = '';
-                }
-            }
+        if (result !== undefined && result['text_list'] !== undefined){
+            console.info('历史记录（全）：' + JSON.stringify(result));
+            contentContainer.contentList = result['text_list'];
+            console.info('历史记录：' + JSON.stringify(contentContainer.contentList));
+            console.info(JSON.stringify(contentContainer.contentList));
         }
     });
 }
 
 function clearData(clearAll: boolean) {
-    chrome.runtime.sendMessage({clear_data: true, clear_all: clearAll}).then(response => {
-        console.info('清除历史记录：'+JSON.stringify(response));
+    chrome.runtime.sendMessage({ clear_data: ['id_kqwwqiew'], clear_all: clearAll }).then(response => {
+        console.info('清除历史记录：' + JSON.stringify(response));
         fetchData();
     }, error => {
-            console.error(error);
+        console.error(error);
     });
 }
 
+function exportData() {
 
+}
 
 </script>
 
 <template>
     <main>
         <button @click="fetchData()">刷新</button>
-            <button @click="clearData()">清除</button>
+        <button @click="clearData(false)">清除</button>
+        <button @click="clearData(true)">清除全部</button>
+        <button @click="exportData()">到处</button>
         <view id="id_list">
 
+        </view>
+        <view v-for="(content, index) in contentContainer.contentList" :key="index">
+            {{ content.selected_text }}
         </view>
     </main>
 </template>

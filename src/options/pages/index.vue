@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { randomUUID } from 'crypto';
-import { h, ref } from 'vue'
 
 let inputText: string;
 // 获取URL中的查询参数
@@ -18,7 +16,6 @@ if (viewSelectedText !== null && viewSelectedText?.length > 120) {
 document.addEventListener('keydown', function (event) {
   if (event.ctrlKey && event.key === 'Enter') {
     let content = {
-      id: randomUUID.toString,
       selected_text: selectedText,
       url: url,
       input_text: inputText,
@@ -27,11 +24,23 @@ document.addEventListener('keydown', function (event) {
     // 将selectedText和url发送到background.js
     chrome.runtime.sendMessage({ save_data: content }).then(function (response) {
       console.info('消息响应：' + JSON.stringify(response));
+      // 关闭浮窗
+      window.close();
     });
-    // 关闭浮窗
-    // window.close();
   }
 });
+
+function generateRandomString(length: number) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
+  }
+
+  return result;
+}
 </script>
 
 <template>
