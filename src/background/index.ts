@@ -18,7 +18,7 @@ chrome.contextMenus.onClicked.addListener(function (info) {
         type: 'popup',
         url: '/src/options/index.html?selectedText=' + info.selectionText + '&url=' + url,
         width: 350,
-        height: 300,
+        height: 350,
         left: 700,
         top: 500
     });
@@ -53,7 +53,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                     }
                     console.info('after: ' + JSON.stringify(contentList));
                     snnipetObject[request.item['url']] = contentList;
-                    chrome.storage.local.set({text_list: snnipetObject});
+                    chrome.storage.local.set({ text_list: snnipetObject });
                 }
             })
         } else {
@@ -74,7 +74,7 @@ function saveData(content: object) {
             }
             contentList.push(content);
             snnipetObject[content.url] = contentList;
-        } else { 
+        } else {
             snnipetObject = {};
             let contentList: object[] = [content];
             snnipetObject[content.url] = contentList;

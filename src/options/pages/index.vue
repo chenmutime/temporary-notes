@@ -15,21 +15,29 @@ if (viewSelectedText !== null && viewSelectedText?.length > 120) {
 
 document.addEventListener('keydown', function (event) {
   if (event.ctrlKey && event.key === 'Enter') {
-    let content = {
-      selected_text: selectedText,
-      url: url,
-      input_text: inputText,
-      timestamp: new Date().getTime()
-    };
-    // 将selectedText和url发送到background.js
-    chrome.runtime.sendMessage({ save_data: content }).then(function (response) {
-      console.info('消息响应：' + JSON.stringify(response));
-      // 关闭浮窗
-      window.close();
-    });
+    submitText();
   }
 });
 
+function submitText() {
+  let content = {
+    selected_text: selectedText,
+    url: url,
+    input_text: inputText,
+    timestamp: new Date().getTime()
+  };
+  // 将selectedText和url发送到background.js
+  chrome.runtime.sendMessage({ save_data: content }).then(function (response) {
+    console.info('消息响应：' + JSON.stringify(response));
+    // 关闭浮窗
+    window.close();
+  });
+}
+
+onMounted(function () {
+  // 光标焦点自动落入textarea中
+  document.getElementsByTagName('textarea')[0].focus();
+});
 </script>
 
 <template>
@@ -37,6 +45,7 @@ document.addEventListener('keydown', function (event) {
   <main>
     <p>{{ viewSelectedText }}</p>
     <textarea v-model="inputText" placeholder="Enter your thoughts"></textarea>
+    <button @click="submitText()">Submit</button><p>(Ctrl+Enter)</p>
   </main>
 </template>
 
