@@ -38,32 +38,24 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             status: 'success'
         });
     } else if (request.clear_data) {
-        if (request.clear_all === true) {
-            chrome.storage.local.remove(['text_list']);
-        } else {
-            const keys = request.clear_data;
+        if (request.item) {
             chrome.storage.local.get(['text_list'], result => {
-                const contentList = result['text_list'];
-                if (contentList !== undefined) {
-                    // 如果contentList中每个对象的id字段值属于keys中，则删除该对象
-                    keys.forEach(key => {
+                let snnipetObject: object = result['text_list'];
+                if (snnipetObject !== undefined) {
+                    let contentList: object[] = snnipetObject[request.item['url']];
+                    console.info('before: ' + JSON.stringify(contentList));
+                    if (contentList !== undefined) {
                         contentList.forEach(content => {
-                            if (content.id === key) {
-                                // 删除该对象
+                            if (content.timestamp === request.item['timestamp']) {
                                 contentList.splice(contentList.indexOf(content), 1);
                             }
                         });
-                    });
-                    chrome.storage.local.set({
-                        text_list: contentList
-                    }, () => {
-                        sendResponse({
-                            status: 'success'
-                        });
                     }
-                    );
+                    console.info('after: ' + JSON.stringify(contentList));
                 }
-            });
+            })
+        } else {
+            chrome.storage.local.remove('text_list');
         }
     }
 });
@@ -85,7 +77,6 @@ function saveData(content: object) {
             let contentList: object[] = [content];
             snnipetObject[content.url] = contentList;
         }
-        console.info('snnipetObject'+JSON.stringify(snnipetObject));
         chrome.storage.local.set({ text_list: snnipetObject }).then(function () {
             console.log('数据成功落库！');
         });

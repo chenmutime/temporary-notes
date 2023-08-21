@@ -13,12 +13,10 @@ function fetchData() {
             let snnipetObject: object = result['text_list'];
             Object.keys(snnipetObject).forEach(key => {
                 let snippetList: object[] = snnipetObject[key];
-                console.info('snippetList: ' + JSON.stringify(snippetList));
                 if (snippetList !== undefined && snippetList.length > 0) {
                     for (let i = 0; i < snippetList.length; i++) {
                         contentContainer.contentList.push(snippetList[i]);
                     }
-                    console.info('contentContainer.contentList: ' + JSON.stringify(contentContainer.contentList));
                 }
             }
             , (error) => { 
@@ -29,12 +27,22 @@ function fetchData() {
     });
 }
 
-function clearData(clearAll: boolean) {
-    chrome.runtime.sendMessage({ clear_data: ['id_kqwwqiew'], clear_all: clearAll }).then(response => {
+function clearAllData() {
+    chrome.runtime.sendMessage({ clear_data: true}).then(response => {
         console.info('清除历史记录：' + JSON.stringify(response));
         fetchData();
     }, error => {
         console.error(error);
+    });
+}
+
+function cleatData(url: string, timestamp: number) {
+    let item = { url: url, timestamp: timestamp }
+    chrome.runtime.sendMessage({ clear_data: true, item: item });
+    contentContainer.contentList.forEach(item => {
+        if (item.url === url && item.timestamp === timestamp) {
+            contentContainer.contentList.splice(contentContainer.contentList.indexOf(item), 1);
+        }
     });
 }
 
@@ -47,14 +55,17 @@ function exportData() {
 <template>
     <main>
         <button @click="fetchData()">刷新</button>
-        <button @click="clearData(false)">清除</button>
-        <button @click="clearData(true)">清除全部</button>
-        <button @click="exportData()">到处</button>
+        <button @click="clearAllData()">清除</button>
+        <button @click="exportData()">导出</button>
         <view id="id_list">
 
         </view>
-        <view v-for="(content, index) in contentContainer.contentList" :key="index">
-            <view style="display: block;margin: 10px 10px;">{{ content.selected_text }}</view>
+        <view v-for="(content, index) in contentContainer.contentList" :key="index" style="display: block;margin: 5px 5px;">
+            <!-- 清除图标，只清除html节点，并不清除实际节点 -->
+            <button @click="cleatData(content.url, content.timestamp)">clear</button>
+            <h3>{{ content.url }}</h3>
+            <view style="display: block;margin: 5px 5px;">{{ content.selected_text }}</view>
+            <view style="display: block;margin: 5px 5px;">{{ content.input_text }}</view>
         </view>
     </main>
 </template>
