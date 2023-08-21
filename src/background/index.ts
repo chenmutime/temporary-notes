@@ -52,6 +52,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                         });
                     }
                     console.info('after: ' + JSON.stringify(contentList));
+                    snnipetObject[request.item['url']] = contentList;
+                    chrome.storage.local.set({text_list: snnipetObject});
                 }
             })
         } else {

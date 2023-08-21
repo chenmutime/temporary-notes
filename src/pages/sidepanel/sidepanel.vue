@@ -47,7 +47,7 @@ function cleatData(url: string, timestamp: number) {
 }
 
 function exportData() {
-
+    
 }
 
 </script>
