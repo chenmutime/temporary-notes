@@ -20,7 +20,7 @@ export default defineManifest(async (env) => ({
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
     // default_popup: 'src/popup/index.html',
-    default_title: 'To open your snippet list',
+    default_title: 'To open your record list',
   },
   background: {
     service_worker: 'src/background/index.ts',
@@ -48,5 +48,5 @@ export default defineManifest(async (env) => ({
       resources: ['src/content-script/iframe/index.html'],
     },
   ],
-  permissions: ['storage', 'contextMenus', 'sidePanel', 'tabs'],
+  permissions: ['storage', 'contextMenus', 'sidePanel', 'clipboardWrite'],
 }))

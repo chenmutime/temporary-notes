@@ -37,17 +37,67 @@ function cleatData(url: string, timestamp: number) {
     });
 }
 
-function exportData() {
+function copyData() {
+    if (contentContainer.contentList.length === 0) {
+        return;
+    }
 
+    let data: string = formatDataToText(contentContainer.contentList);
+    navigator.clipboard.writeText(data)
+        .then(function () {
+            console.log("Data copied to clipboard");
+            alert("数据已复制到剪切板");
+        })
+        .catch(function (error) {
+            console.error("Error copying to clipboard:", error);
+        });
 }
 
+function formatDataToText(contentList: object[]) {
+    let formattedText = "";
+
+    contentList.forEach(content => {
+        let snippetList: object[] = content;
+        if (snippetList.length > 0) {
+            let url: string = snippetList[0].url;
+            formattedText += url + "\n";
+        }
+        snippetList.forEach(snippet => {
+            let selectedText: string = snippet.selected_text;
+            let inputText: string = snippet.input_text;
+
+            let tmpObject: string = "";
+            tmpObject += "-------------------------------\n";
+            tmpObject += selectedText;
+            if (inputText !== undefined && inputText !== "") {
+                tmpObject += "\n";
+                tmpObject += inputText;
+            }
+            tmpObject += "\n";
+
+            formattedText += tmpObject;
+        });
+        formattedText += "\n";
+    });
+
+    return formattedText;
+}
+
+
+function clipSelectedText(selectedText: string): string {
+    var viewSelectedText = selectedText;
+    if (viewSelectedText !== null && viewSelectedText?.length > 120) {
+        viewSelectedText = viewSelectedText?.substring(0, 120) + '...';
+    }
+    return viewSelectedText;
+}
 </script>
 
 <template>
     <main>
         <button @click="fetchData()">刷新</button>
         <button @click="clearAllData()">清除</button>
-        <button @click="exportData()">导出</button>
+        <button @click="copyData()">复制</button>
         <view v-for="(snippetList, index) in contentContainer.contentList" :key="index"
             style="display: block;margin: 5px 5px;">
             <view v-if="snippetList.length > 0">
@@ -55,7 +105,7 @@ function exportData() {
                 <!-- 根据index获取随机颜色 -->
                 <view v-for="(snippet, sIndex) in snippetList" :key="sIndex">
                     <!-- 清除图标，只清除html节点，并不清除实际节点 -->
-                    <view class="selectedText">{{ snippet.selected_text }}</view>
+                    <view class="selectedText">{{ clipSelectedText(snippet.selected_text) }}</view>
                     <view class="inputText">{{ snippet.input_text }}</view>
                     <button @click="cleatData(snippet.url, snippet.timestamp)">clear</button>
                 </view>
