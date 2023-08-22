@@ -20,7 +20,7 @@ export default defineManifest(async (env) => ({
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
     // default_popup: 'src/popup/index.html',
-    default_title: 'To open your record list',
+    default_title: 'Open note list',
   },
   background: {
     service_worker: 'src/background/index.ts',

@@ -21,6 +21,7 @@ function fetchData() {
 }
 
 function clearAllData() {
+    alert('清除所有数据?');
     chrome.runtime.sendMessage({ clear_data: true });
     contentContainer.contentList = [];
 }
