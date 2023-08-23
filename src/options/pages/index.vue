@@ -42,14 +42,22 @@ onMounted(function () {
 
 <template>
   <!-- 定义一个面板，位于屏幕正中央 -->
-  <main>
-    <p>{{ viewSelectedText }}</p>
-    <textarea v-model="inputText" placeholder="Enter your thoughts"></textarea>
-    <button @click="submitText()">Submit</button><p>(Ctrl+Enter)</p>
+  <main class="w-full h-36">
+    <div class="w-full justify-center text-center items-center">
+      <p class="text-gray-400 text-xm text-left m-3">{{ viewSelectedText }}</p>
+      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-32 text-sm items-center resize-none" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
+    </div>
+    <div class="w-full justify-end text-right items-end" >
+        <button class="mx-4 my-1 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded" @click="submitText()">Submit</button>
+    </div>
   </main>
 </template>
 
 <style>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 main {
   width: 100%;
   height: 150px;
