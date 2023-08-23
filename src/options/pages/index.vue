@@ -9,8 +9,17 @@ const selectedText = urlParams.get('selectedText');
 const url = urlParams.get('url');
 // 截取选中的文本
 var viewSelectedText = selectedText;
-if (viewSelectedText !== null && viewSelectedText?.length > 120) {
-  viewSelectedText = viewSelectedText?.substring(0, 120) + '...';
+if (viewSelectedText !== null) {
+  let haveChinese = containsChinese(viewSelectedText);
+  let limitLength = haveChinese ? 80 : 150;
+  if (viewSelectedText?.length > limitLength) { 
+    viewSelectedText = viewSelectedText?.substring(0, limitLength) + '...';
+  }
+}
+
+function containsChinese(text: string) {
+  const pattern = /[\u4e00-\u9fa5]/; // Unicode 范围：中文字符的起始值（0x4e00）到结束值（0x9fa5）
+  return pattern.test(text);
 }
 
 document.addEventListener('keydown', function (event) {
@@ -45,7 +54,7 @@ onMounted(function () {
   <main class="w-full h-36">
     <div class="w-full justify-center text-center items-center">
       <p class="text-gray-400 text-xm text-left m-3">{{ viewSelectedText }}</p>
-      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-32 text-sm items-center resize-none" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
+      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-32 text-sm items-center resize-none border-gray-300" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
     </div>
     <div class="w-full justify-end text-right items-end" >
         <button class="mx-4 my-1 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded" @click="submitText()">Submit</button>
