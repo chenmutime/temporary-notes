@@ -34,7 +34,7 @@ export default defineManifest(async (env) => ({
     },
   ],
   side_panel: {
-    default_path: '/src/pages/sidepanel/sidepanel.html',
+    default_path: '/src/sidepanel/sidepanel.html',
   },
   host_permissions: ['*://*/*'],
   options_page: 'src/options/index.html',
