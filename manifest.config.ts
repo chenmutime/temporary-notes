@@ -25,14 +25,14 @@ export default defineManifest(async (env) => ({
   background: {
     service_worker: 'src/background/index.ts',
   },
-  content_scripts: [
-    {
-      all_frames: false,
-      js: ['src/content-script/index.ts'],
-      matches: ['*://*/*'],
-      run_at: 'document_end',
-    },
-  ],
+  // content_scripts: [
+  //   {
+  //     all_frames: false,
+  //     js: ['src/content-script/index.ts'],
+  //     matches: ['*://*/*'],
+  //     run_at: 'document_end',
+  //   },
+  // ],
   side_panel: {
     default_path: '/src/sidepanel/sidepanel.html',
   },
