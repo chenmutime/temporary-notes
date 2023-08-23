@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
+import { clipSelectedText } from '../common/helper'
 
 let contentContainer = reactive({ contentList: [] });
 fetchData();
@@ -82,24 +83,6 @@ function formatDataToText(contentList: object[]) {
     });
 
     return formattedText;
-}
-
-
-function clipSelectedText(selectedText: string): string {
-    var viewSelectedText = selectedText;
-    if (viewSelectedText !== null) {
-        let haveChinese = containsChinese(viewSelectedText);
-        let limitLength = haveChinese ? 80 : 150;
-        if (viewSelectedText?.length > limitLength) {
-            viewSelectedText = viewSelectedText?.substring(0, limitLength) + '...';
-        }
-    }
-    return viewSelectedText;
-}
-
-function containsChinese(text: string) {
-    const pattern = /[\u4e00-\u9fa5]/; // Unicode 范围：中文字符的起始值（0x4e00）到结束值（0x9fa5）
-    return pattern.test(text);
 }
 
 </script>

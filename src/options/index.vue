@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { clipSelectedText } from '../common/helper'
 
 let inputText: string;
 // 获取URL中的查询参数
@@ -8,19 +9,7 @@ const urlParams = new URLSearchParams(queryString);
 const selectedText = urlParams.get('selectedText');
 const url = urlParams.get('url');
 // 截取选中的文本
-var viewSelectedText = selectedText;
-if (viewSelectedText !== null) {
-  let haveChinese = containsChinese(viewSelectedText);
-  let limitLength = haveChinese ? 80 : 150;
-  if (viewSelectedText?.length > limitLength) { 
-    viewSelectedText = viewSelectedText?.substring(0, limitLength) + '...';
-  }
-}
-
-function containsChinese(text: string) {
-  const pattern = /[\u4e00-\u9fa5]/; // Unicode 范围：中文字符的起始值（0x4e00）到结束值（0x9fa5）
-  return pattern.test(text);
-}
+var viewSelectedText = clipSelectedText(selectedText);
 
 document.addEventListener('keydown', function (event) {
   if (event.ctrlKey && event.key === 'Enter') {
