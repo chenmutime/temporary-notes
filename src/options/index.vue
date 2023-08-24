@@ -40,10 +40,10 @@ onMounted(function () {
 
 <template>
   <!-- 定义一个面板，位于屏幕正中央 -->
-  <main class="w-full h-36">
+  <main>
     <div class="w-full justify-center text-center items-center">
       <p class="text-gray-400 text-xm text-left m-3">{{ viewSelectedText }}</p>
-      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-32 text-sm items-center resize-none border-gray-300" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
+      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-32 text-sm items-center resize-none border-gray-300 bg-gray-100" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
     </div>
     <div class="w-full justify-end text-right items-end" >
         <button class="mx-4 my-1 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded" @click="submitText()">Submit</button>
@@ -56,27 +56,4 @@ onMounted(function () {
 @tailwind components;
 @tailwind utilities;
 
-main {
-  width: 100%;
-  height: 150px;
-  justify-content: center;
-  align-items: center;
-  text-align: left;
-}
-
-textarea {
-  width: 96%;
-  height: 130px;
-  border: 1px solid #ccc;
-  padding: 0.1em;
-  resize: none;
-}
-
-p {
-  padding: 0.1em;
-  font-size: small;
-  font-display: block;
-  color: #9a9797;
-  text-align: left;
-}
 </style>

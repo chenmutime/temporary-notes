@@ -9,7 +9,7 @@ export function clipSelectedText(selectedText: string): string {
         const haveChinese: boolean = containsChinese(viewSelectedText);
         const limitLength: number = haveChinese ? 80 : 150;
         if (viewSelectedText?.length > limitLength) {
-            viewSelectedText = viewSelectedText?.substring(0, limitLength) + '...';
+            viewSelectedText = viewSelectedText?.substring(0, limitLength) + '......';
         }
     }
     return viewSelectedText;

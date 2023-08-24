@@ -18,7 +18,7 @@ chrome.contextMenus.onClicked.addListener(function (info) {
         type: 'popup',
         url: '/src/options/index.html?selectedText=' + info.selectionText + '&url=' + url,
         width: 350,
-        height: 350,
+        height: 300,
         left: 700,
         top: 500
     });
