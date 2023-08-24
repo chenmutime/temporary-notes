@@ -85,30 +85,53 @@ function formatDataToText(contentList: object[]) {
     return formattedText;
 }
 
+const bg_color_arr: string[] = ["bg-green-50", "bg-yellow-50", "bg-red-50", "bg-lime-50", "bg-violet-50"];
+
 </script>
 
 <template>
     <main>
-        <button @click="fetchData()">刷新</button>
-        <button @click="clearAllData()">清除</button>
-        <button @click="copyData()">复制</button>
-        <view v-for="(snippetList, index) in contentContainer.contentList" :key="index"
-            style="display: block;margin: 5px 5px;">
+        <div class="w-full justify-start items-start px-2">
+            <button class="mx-2 my-2 bg-gray-500 hover:bg-gray-700 text-white font-bold py-1.5 px-3 rounded"
+                @click="fetchData()">刷新</button>
+            <button class="mx-2 my-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded"
+                @click="clearAllData()">清除</button>
+            <button class="mx-2 my-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded"
+                @click="copyData()">复制</button>
+        </div>
+        <div class="border-b border-1 border-gray-300"></div>
+        <view v-for="(snippetList, index) in contentContainer.contentList" :key="index">
             <view v-if="snippetList.length > 0">
-                <h3>{{ snippetList[0].url }}</h3>
-                <!-- 根据index获取随机颜色 -->
-                <view v-for="(snippet, sIndex) in snippetList" :key="sIndex">
-                    <!-- 清除图标，只清除html节点，并不清除实际节点 -->
-                    <view class="selectedText">{{ clipSelectedText(snippet.selected_text) }}</view>
-                    <view class="inputText">{{ snippet.input_text }}</view>
-                    <button @click="cleatData(snippet.url, snippet.timestamp)">clear</button>
-                </view>
+                <div class="rounded overflow-hidden shadow-xl m-4 border-gray-500 border-solid"
+                    :class="bg_color_arr[index % 5]">
+                    <!-- 标题，自动换行 -->
+                    <div class="font-bold text-sm p-2 text-left" :href="snippetList[0].url">{{ snippetList[0].url }}</div>
+                    <!-- 分割线 -->
+                    <div class="border-b border-gray-300"></div>
+                    <!-- 根据index获取随机颜色 -->
+                    <view v-for="(snippet, sIndex) in snippetList" :key="sIndex">
+                        <!-- 清除图标，只清除html节点，并不清除实际节点 -->
+                        <div class="p-2 flex">
+                            <img src="../assets/delete.svg" class="h-4 w-4 mt-1 " @click="cleatData(snippet.url, snippet.timestamp)">
+                            <div class="mx-1">
+                                <p class="text-gray-400 text-xm text-left">{{ clipSelectedText(snippet.selected_text) }}</p>
+                                <p class="text-gray-700 text-base text-left">{{ snippet.input_text }}</p>
+                            </div>
+                        </div>
+                    </view>
+                </div>
             </view>
         </view>
     </main>
 </template>
 
-<style scoped>  .selectedText {
+<style>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+</style>
+
+<!-- <style scoped>  .selectedText {
       font-size: smaller;
       color: rgb(200, 200, 200);
       display: block;
@@ -121,4 +144,4 @@ function formatDataToText(contentList: object[]) {
       display: block;
       margin: 5px 5px;
   }
-</style>
+</style> -->
