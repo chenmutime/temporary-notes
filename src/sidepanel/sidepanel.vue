@@ -126,7 +126,7 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
 </script>
 
 <template>
-    <div id="confirmationModal" class="modal hidden fixed inset-0 flex items-center justify-center">
+    <div id="confirmationModal" class="modal hidden fixed inset-0 mx-auto mt-12 w-40">
         <div class="modal-content bg-white p-4 rounded shadow">
             <h2 class="text-xl font-bold mb-2">确认操作</h2>
             <p class="text-gray-700 mb-4">你确定要执行此操作吗？</p>
@@ -138,8 +138,9 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
             </div>
         </div>
     </div>
-    <div id="successToastContainer" class="toast-container hidden fixed inset-0 flex items-center justify-center">
-        <div id="successToast" class="toast bg-green-500 text-white text-sm font-semibold py-2 px-4 rounded">
+    <!--  flex items-center justify-center -->
+    <div id="successToastContainer" class="toast-container hidden fixed inset-0 mx-auto mt-12 w-full h-10 items-center justify-center">
+        <div id="successToast" class="toast bg-green-500 text-white text-sm font-semibold py-2 px-4 rounded w-22">
             操作成功！
         </div>
     </div>
