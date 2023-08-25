@@ -108,16 +108,15 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                 <div class="rounded overflow-hidden shadow-xl m-4 border-gray-500 border-solid"
                     :class="bg_color_arr[index % 5]">
                     <!-- 标题，自动换行 -->
-                    <div class="font-bold text-sm p-2 text-left break-all" :class="title_bg_color_arr[index % 5]"
-                        :href="snippetList[0].url">{{ snippetList[0].url }}</div>
+                    <div class="font-bold text-sm p-2 text-left break-all" :class="title_bg_color_arr[index % 5]"><a :href="snippetList[0].url">{{ snippetList[0].url }}</a></div>
 
                     <!-- 根据index获取随机颜色 -->
                     <view v-for="(snippet, sIndex) in snippetList" :key="sIndex">
                         <!-- 清除图标，只清除html节点，并不清除实际节点 -->
                         <div class="p-2">
                             <div class="mx-1">
-                                <p class="text-gray-400 text-xm text-left break-all">“{{
-                                    clipSelectedText(snippet.selected_text) }}”</p>
+                                <p class="text-gray-400 text-xm text-left break-all"><cite>{{
+                                    clipSelectedText(snippet.selected_text) }}</cite></p>
                                 <p class="text-gray-700 text-base text-left break-all">{{ snippet.input_text }}</p>
                             </div>
                             <div class="flex justify-end items-end mx-1 ">
