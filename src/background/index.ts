@@ -80,7 +80,6 @@ function saveData(content: object) {
             snnipetObject[content.url] = contentList;
         }
         chrome.storage.local.set({ text_list: snnipetObject }).then(function () {
-            console.log('数据成功落库！');
             chrome.runtime.sendMessage({ refresh_data: true });
         });
     });
