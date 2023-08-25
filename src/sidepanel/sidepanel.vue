@@ -27,12 +27,31 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 function clearAllData() {
-    alert('清除所有数据?');
     chrome.runtime.sendMessage({ clear_data: true });
     contentContainer.contentList = [];
 }
 
-function cleatData(url: string, timestamp: number) {
+function showConfirmation() {
+    var modal = document.getElementById("confirmationModal");
+    if (modal !== null) {
+        modal.classList.remove("hidden");
+    }
+}
+
+function closeConfirmation() {
+    var modal = document.getElementById("confirmationModal");
+    if (modal !== null) {
+        modal.classList.add("hidden");
+    }
+}
+
+function confirmAction() {
+    // 在这里执行确认操作的逻辑
+    closeConfirmation();
+    clearAllData();
+}
+
+function clearData(url: string, timestamp: number) {
     let item = { url: url, timestamp: timestamp }
     chrome.runtime.sendMessage({ clear_data: true, item: item });
     contentContainer.contentList.forEach(snippetList => {
@@ -52,12 +71,24 @@ function copyData() {
     let data: string = formatDataToText(contentContainer.contentList);
     navigator.clipboard.writeText(data)
         .then(function () {
-            console.log("Data copied to clipboard");
-            alert("数据已复制到剪切板");
+            showSuccessToast();
         })
         .catch(function (error) {
             console.error("Error copying to clipboard:", error);
         });
+}
+
+function showSuccessToast() {
+    var container = document.getElementById("successToastContainer");
+    if (container !== null) {
+        container.classList.remove("hidden");
+        container.classList.add("flex");
+
+        setTimeout(function () {
+            container.classList.add("hidden");
+            container.classList.remove("flex");
+        }, 2000);
+    }
 }
 
 function formatDataToText(contentList: object[]) {
@@ -95,10 +126,27 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
 </script>
 
 <template>
+    <div id="confirmationModal" class="modal hidden fixed inset-0 flex items-center justify-center">
+        <div class="modal-content bg-white p-4 rounded shadow">
+            <h2 class="text-xl font-bold mb-2">确认操作</h2>
+            <p class="text-gray-700 mb-4">你确定要执行此操作吗？</p>
+            <div class="flex justify-center">
+                <button @click="confirmAction()"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">确认</button>
+                <button @click="closeConfirmation()"
+                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">取消</button>
+            </div>
+        </div>
+    </div>
+    <div id="successToastContainer" class="toast-container hidden fixed inset-0 flex items-center justify-center">
+        <div id="successToast" class="toast bg-green-500 text-white text-sm font-semibold py-2 px-4 rounded">
+            操作成功！
+        </div>
+    </div>
     <main>
         <div class="w-full justify-start items-start px-2">
             <button class="mx-2 my-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded"
-                @click="clearAllData()">Clear</button>
+                @click="showConfirmation()">Clear</button>
             <button class="mx-2 my-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded"
                 @click="copyData()">Copy</button>
         </div>
@@ -108,7 +156,8 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                 <div class="rounded overflow-hidden shadow-xl m-4 border-gray-500 border-solid"
                     :class="bg_color_arr[index % 5]">
                     <!-- 标题，自动换行 -->
-                    <div class="font-bold text-sm p-2 text-left break-all" :class="title_bg_color_arr[index % 5]"><a :href="snippetList[0].url">{{ snippetList[0].url }}</a></div>
+                    <div class="font-bold text-sm p-2 text-left break-all" :class="title_bg_color_arr[index % 5]"><a
+                            :href="snippetList[0].url">{{ snippetList[0].url }}</a></div>
 
                     <!-- 根据index获取随机颜色 -->
                     <view v-for="(snippet, sIndex) in snippetList" :key="sIndex">
@@ -121,7 +170,7 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                             </div>
                             <div class="flex justify-end items-end mx-1 ">
                                 <img id="id_trash" src="../assets/trash.png" class="h-5 w-5 hover:bg-teal-500 rounded-lg"
-                                    @click="cleatData(snippet.url, snippet.timestamp)">
+                                    @click="clearData(snippet.url, snippet.timestamp)">
                             </div>
                         </div>
                         <!-- 分割线 -->
