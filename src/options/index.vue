@@ -26,7 +26,6 @@ function submitText() {
   };
   // 将selectedText和url发送到background.js
   chrome.runtime.sendMessage({ save_data: content }).then(function (response) {
-    console.info('消息响应：' + JSON.stringify(response));
     // 关闭浮窗
     window.close();
   });
@@ -43,7 +42,7 @@ onMounted(function () {
   <main>
     <div class="w-full justify-center text-center items-center">
       <p class="text-gray-400 text-xm text-left m-3">{{ viewSelectedText }}</p>
-      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-32 text-sm items-center resize-none border-gray-300 bg-green-50" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
+      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-32 text-sm items-center resize-none border-gray-300 bg-gray-100" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
     </div>
     <div class="w-full justify-end text-right items-end" >
         <button class="mx-4 my-1 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded" @click="submitText()">Submit</button>

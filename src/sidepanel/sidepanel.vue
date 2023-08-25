@@ -21,6 +21,12 @@ function fetchData() {
     });
 }
 
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.refresh_data) {
+        fetchData();
+    }
+});
+
 function clearAllData() {
     alert('清除所有数据?');
     chrome.runtime.sendMessage({ clear_data: true });
@@ -93,8 +99,6 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
 <template>
     <main>
         <div class="w-full justify-start items-start px-2">
-            <button class="mx-2 my-2 bg-gray-500 hover:bg-gray-700 text-white font-bold py-1.5 px-3 rounded"
-                @click="fetchData()">刷新</button>
             <button class="mx-2 my-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded"
                 @click="clearAllData()">清除</button>
             <button class="mx-2 my-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded"
