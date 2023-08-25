@@ -6,7 +6,7 @@ export { }
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         "id": "RecordQuickly",
-        "title": "快速记录",
+        "title": "Quick Record",
         "contexts": ["selection"]
     });
 });
