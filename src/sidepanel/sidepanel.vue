@@ -26,6 +26,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
+function changeTitle(index: number) {
+    let snippetList: object[] = contentContainer.contentList[index];
+    if (snippetList !== undefined && snippetList.length > 0) {
+        let newTitle: string = document.getElementById('title_' + index).value;
+        snippetList[0].title = newTitle; 
+        chrome.runtime.sendMessage({ update_data: snippetList[0] });
+    }
+    console.log(JSON.stringify(snippetList));
+}
+
 function clearAllData() {
     chrome.runtime.sendMessage({ clear_data: true });
     contentContainer.contentList = [];
@@ -97,15 +107,15 @@ function formatDataToText(contentList: object[]) {
     contentList.forEach(content => {
         let snippetList: object[] = content;
         if (snippetList.length > 0) {
-            let url: string = snippetList[0].url;
-            formattedText += url + "\n";
+            let title: string = snippetList[0].title;
+            formattedText += title;
         }
         snippetList.forEach(snippet => {
             let selectedText: string = snippet.selected_text;
             let inputText: string = snippet.input_text;
 
             let tmpObject: string = "";
-            tmpObject += "-------------------------------\n";
+            tmpObject += "\n";
             tmpObject += selectedText;
             if (inputText !== undefined && inputText !== "") {
                 tmpObject += "\n";
@@ -115,7 +125,7 @@ function formatDataToText(contentList: object[]) {
 
             formattedText += tmpObject;
         });
-        formattedText += "\n";
+        formattedText += "\n\n";
     });
 
     return formattedText;
@@ -157,8 +167,9 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                 <div class="rounded overflow-hidden shadow-xl m-4 border-gray-500 border-solid"
                     :class="bg_color_arr[index % 5]">
                     <!-- 标题，自动换行 -->
-                    <div class="font-bold text-sm p-2 text-left break-all" :class="title_bg_color_arr[index % 5]"><a
-                            :href="snippetList[0].url">{{ snippetList[0].url }}</a></div>
+                    <div class="font-bold text-sm p-2 text-left break-all" :class="title_bg_color_arr[index % 5]">
+                        <input :id="'title_' + index" type="text" class="border-none w-full" :class="title_bg_color_arr[index % 5]" :value="snippetList[0].title" @focusout="changeTitle(index)">
+                    </div>
 
                     <!-- 根据index获取随机颜色 -->
                     <view v-for="(snippet, sIndex) in snippetList" :key="sIndex">

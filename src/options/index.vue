@@ -21,6 +21,7 @@ function submitText() {
   let content = {
     selected_text: selectedText,
     url: url,
+    title: url,
     input_text: inputText,
     timestamp: new Date().getTime()
   };
