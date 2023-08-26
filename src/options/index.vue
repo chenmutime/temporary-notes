@@ -43,7 +43,7 @@ onMounted(function () {
   <main>
     <div class="w-full justify-center text-center items-center">
       <div class="h-18"><p class="text-gray-400 text-xm text-left m-3"><cite>{{ viewSelectedText }}</cite></p></div>
-      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-28 text-sm items-center resize-none border-gray-300 bg-gray-50" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
+      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-28 text-sm items-center resize-none border-gray-200 outline-gray-200 bg-gray-50" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
     </div>
     <div class="w-full justify-end text-right items-end" >
         <button class="mx-4 my-1 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded" @click="submitText()">Submit</button>

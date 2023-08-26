@@ -59,6 +59,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         }
     } else if (request.update_data) { 
         updateDate(request.update_data);
+        sendResponse({
+            status: 'success'
+        });
     }
 });
 
