@@ -17,6 +17,7 @@ export default defineManifest(async (env) => ({
   // semver is OK in "version_name"
   version_name: version,
   manifest_version: 3,
+  description: 'Effortlessly capture the essential page content and jot down ideas. Easily copy them all to the clipboard in bulk at any desired moment.',
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
     // default_popup: 'src/popup/index.html',
