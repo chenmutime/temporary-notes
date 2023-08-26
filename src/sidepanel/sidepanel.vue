@@ -137,20 +137,20 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
 
 <template>
     <div id="confirmationModal" class="modal hidden fixed inset-0 mx-auto mt-12 w-40">
-        <div class="modal-content bg-white p-4 rounded shadow">
-            <p class="text-gray-700 mb-4 font-bold">Clear all</p>
+        <div class="modal-content bg-white p-4 rounded shadow justify-center items-center text-center">
+            <h3 class="text-gray-700 mb-4 font-bold">Clear all?</h3>
             <div class="flex justify-center">
                 <button @click="confirmAction()"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Confirm</button>
+                    class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded mr-2">Confirm</button>
                 <button @click="closeConfirmation()"
-                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Cancel</button>
+                    class="bg-gray-400 hover:bg-gray-600 text-white font-bold py-1 px-2 rounded">Cancel</button>
             </div>
         </div>
     </div>
     <!--  flex items-center justify-center -->
     <div id="successToastContainer" class="toast-container hidden fixed inset-0 mx-auto mt-12 w-full h-10 items-center justify-center">
         <div id="successToast" class="toast bg-green-500 text-white text-sm font-semibold py-2 px-4 rounded w-22">
-            Copied！
+            Copied!
         </div>
     </div>
     <main>

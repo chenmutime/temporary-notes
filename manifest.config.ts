@@ -49,4 +49,10 @@ export default defineManifest(async (env) => ({
     },
   ],
   permissions: ['storage', 'contextMenus', 'sidePanel', 'clipboardWrite'],
+  icons: {
+    16: 'src/assets/logo.png',
+    32: 'src/assets/logo.png',
+    48: 'src/assets/logo.png',
+    128: 'src/assets/logo.png',
+  },
 }))
