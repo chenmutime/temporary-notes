@@ -45,7 +45,11 @@ function changeTitle(index: number) {
 function editTitle(index: number) {
     let titleNode = document.getElementById('title_' + index);
     if (titleNode !== null) {
-        titleNode.disabled = false;
+        // titleNode.disabled = false;
+        // titleNode.addEventListener('focus', function () {
+        //     this.select();
+        // });
+        titleNode.select();
         titleNode.focus();
     }
 }
@@ -146,7 +150,6 @@ function formatDataToText(contentList: object[]) {
 }
 const bg_color_arr: string[] = ["bg-green-50", "bg-yellow-50", "bg-red-50", "bg-lime-50", "bg-violet-50"];
 const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-100", "bg-lime-100", "bg-violet-100"];
-const outline_color_arr: string[] = ["outline-green-100", "outline-yellow-100", "outline-red-100", "outline-lime-100", "outline-violet-100"];
 
 </script>
 
@@ -184,9 +187,8 @@ const outline_color_arr: string[] = ["outline-green-100", "outline-yellow-100", 
                     <!-- 标题，自动换行 -->
                     <div class="flex" :class="title_bg_color_arr[index % 5]">
                         
-                        <input :id="'title_' + index" type="text" class="bg-transparent border-none w-11/12 " disabled="true"
-                            :value="snippetList[0].title"
-                            @focusout="changeTitle(index)">
+                        <input :id="'title_' + index" type="text" class="bg-transparent focus:outline-transparent border-none w-11/12 "
+                            :value="snippetList[0].title">
 
                         <div class="flex justify-center items-center mx-1 ">
                             <img src="../assets/edit.svg" alt="" class="h-5 w-5 hover:bg-gray-200 rounded-lg"
