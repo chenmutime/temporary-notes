@@ -39,7 +39,7 @@ function changeTitle(index: number) {
         });
         return true;
     }
-    console.log(JSON.stringify(snippetList));
+    // console.log(JSON.stringify(snippetList));
 }
 
 function editTitle(index: number) {
@@ -122,7 +122,7 @@ function formatDataToText(contentList: object[]) {
         let snippetList: object[] = content;
         if (snippetList.length > 0) {
             let title: string = snippetList[0].title;
-            formattedText += '<< ' + title + ' >>';
+            formattedText += '>>> ' + title;
         }
         snippetList.forEach(snippet => {
             let selectedText: string = snippet.selected_text;
@@ -152,7 +152,7 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
 <template>
     <div id="confirmationModal" class="modal hidden fixed inset-0 mx-auto mt-12 w-40">
         <div class="modal-content bg-white p-4 rounded shadow justify-center items-center text-center">
-            <h3 class="text-gray-700 mb-4 font-bold">Clear all?</h3>
+            <h3 class="text-gray-700 mb-4 font-bold">Clear all ?</h3>
             <div class="flex justify-center">
                 <button @click="confirmAction()"
                     class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded mr-2">Confirm</button>
@@ -182,13 +182,10 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                     <!-- 标题，自动换行 -->
                     <div class="flex h-10 w-full" :class="title_bg_color_arr[index % 5]">
                         <div class="flex justify-center items-center w-full">
-                            <input :id="'title_' + index" type="text"
-                                class="bg-transparent focus:bg-white border-none h-6 w-11/12 p-0"
-                                :value="snippetList[0].title">
+                            <input :id="'title_' + index" type="text" class="bg-transparent focus:bg-white border-none h-6 w-11/12 p-0" :value="snippetList[0].title" @focusout="changeTitle(index)">
                         </div>
                         <div class="flex justify-center items-center mx-2">
-                            <img src="../assets/edit.svg" alt="" class="h-5 w-5 hover:bg-gray-200 rounded-lg"
-                                @click="editTitle(index)">
+                            <img src="../assets/edit.svg" alt="" class="h-5 w-5 hover:bg-gray-200 rounded-lg" @click="editTitle(index)">
                         </div>
                     </div>
 
