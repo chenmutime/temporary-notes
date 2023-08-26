@@ -31,7 +31,7 @@ chrome.sidePanel
 
 // 接收来自其他js页面发送过来的消息
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    console.log("receive: " + JSON.stringify(request));
+    // console.log("receive: " + JSON.stringify(request));
     if (request.save_data) {
         saveData(request.save_data);
         sendResponse({

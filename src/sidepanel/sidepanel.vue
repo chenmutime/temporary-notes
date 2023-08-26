@@ -183,7 +183,8 @@ const outline_color_arr: string[] = ["outline-green-100", "outline-yellow-100", 
                     :class="bg_color_arr[index % 5]">
                     <!-- 标题，自动换行 -->
                     <div class="flex" :class="title_bg_color_arr[index % 5]">
-                        <input :id="'title_' + index" class="bg-transparent outline-none border-none w-11/12 " disabled="true"
+                        
+                        <input :id="'title_' + index" type="text" class="bg-transparent border-none w-11/12 " disabled="true"
                             :value="snippetList[0].title"
                             @focusout="changeTitle(index)">
 
