@@ -45,10 +45,6 @@ function changeTitle(index: number) {
 function editTitle(index: number) {
     let titleNode = document.getElementById('title_' + index);
     if (titleNode !== null) {
-        // titleNode.disabled = false;
-        // titleNode.addEventListener('focus', function () {
-        //     this.select();
-        // });
         titleNode.select();
         titleNode.focus();
     }
@@ -182,15 +178,15 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
         <div class="border-b border-1 border-gray-300"></div>
         <view v-for="(snippetList, index) in contentContainer.contentList" :key="index">
             <view v-if="snippetList.length > 0">
-                <div class="rounded overflow-hidden shadow-xl m-4 border-gray-500"
-                    :class="bg_color_arr[index % 5]">
+                <div class="rounded overflow-hidden shadow-xl m-4 border-gray-500" :class="bg_color_arr[index % 5]">
                     <!-- 标题，自动换行 -->
-                    <div class="flex" :class="title_bg_color_arr[index % 5]">
-                        
-                        <input :id="'title_' + index" type="text" class="bg-transparent focus:outline-transparent border-none w-11/12 "
-                            :value="snippetList[0].title">
-
-                        <div class="flex justify-center items-center mx-1 ">
+                    <div class="flex h-10 w-full" :class="title_bg_color_arr[index % 5]">
+                        <div class="flex justify-center items-center w-full">
+                            <input :id="'title_' + index" type="text"
+                                class="bg-transparent focus:bg-white border-none h-6 w-11/12 p-0"
+                                :value="snippetList[0].title">
+                        </div>
+                        <div class="flex justify-center items-center mx-2">
                             <img src="../assets/edit.svg" alt="" class="h-5 w-5 hover:bg-gray-200 rounded-lg"
                                 @click="editTitle(index)">
                         </div>
@@ -225,4 +221,5 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
 <style>
 @tailwind base;
 @tailwind components;
-@tailwind utilities;</style>
+@tailwind utilities;
+</style>
