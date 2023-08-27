@@ -14,3 +14,6 @@ export function clipSelectedText(selectedText: string): string {
     }
     return viewSelectedText;
 }
+
+// the key of storage data in local
+export const KEY_TEXT_LIST = 'text_list';

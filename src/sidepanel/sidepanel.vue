@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { clipSelectedText } from '../common/helper'
+import { SnnipetObject } from '../common/SnippetObject'
+import { clipSelectedText, KEY_TEXT_LIST } from '../common/helper'
 
 let contentContainer = reactive({ contentList: [] });
-fetchData();
+localFetchData();
 
-function fetchData() {
-    chrome.storage.local.get(["text_list"]).then((result) => {
-        if (result !== undefined && result['text_list'] !== undefined) {
+function localFetchData() {
+    chrome.storage.local.get([KEY_TEXT_LIST]).then((result) => {
+        if (result !== undefined && result[KEY_TEXT_LIST] !== undefined) {
             // reset contentContainer.contentList
             contentContainer.contentList = [];
 
-            let snnipetObject: object = result['text_list'];
+            let snnipetObject: object = result[KEY_TEXT_LIST];
             Object.keys(snnipetObject).forEach(url => {
                 let snippetList: object[] = snnipetObject[url];
                 contentContainer.contentList.push(snippetList);
@@ -22,7 +23,7 @@ function fetchData() {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.refresh_data) {
-        fetchData();
+        localFetchData();
     }
 });
 

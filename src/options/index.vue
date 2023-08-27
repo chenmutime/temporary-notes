@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { clipSelectedText } from '../common/helper'
+import { SnnipetObject } from '../common/SnippetObject'
 
 let inputText: string;
 // 获取URL中的查询参数
@@ -18,13 +19,8 @@ document.addEventListener('keydown', function (event) {
 });
 
 function submitText() {
-  let content = {
-    selected_text: selectedText,
-    url: url,
-    title: url,
-    input_text: inputText,
-    timestamp: new Date().getTime()
-  };
+
+  let content = new SnnipetObject(url, url, selectedText, inputText);
   // 将selectedText和url发送到background.js
   chrome.runtime.sendMessage({ save_data: content }).then(function (response) {
     // 关闭浮窗

@@ -1,4 +1,5 @@
-import { json } from "stream/consumers";
+import { KEY_TEXT_LIST } from '../common/helper'
+import { SnnipetObject } from '../common/SnippetObject'
 
 export { }
 
@@ -31,7 +32,6 @@ chrome.sidePanel
 
 // 接收来自其他js页面发送过来的消息
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    // console.log("receive: " + JSON.stringify(request));
     if (request.save_data) {
         saveData(request.save_data);
         sendResponse({
@@ -39,23 +39,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     } else if (request.clear_data) {
         if (request.item) {
-            chrome.storage.local.get(['text_list'], result => {
-                let snnipetObject: object = result['text_list'];
-                if (snnipetObject !== undefined) {
-                    let contentList: object[] = snnipetObject[request.item['url']];
-                    if (contentList !== undefined) {
-                        contentList.forEach(content => {
-                            if (content.timestamp === request.item['timestamp']) {
-                                contentList.splice(contentList.indexOf(content), 1);
-                            }
-                        });
-                    }
-                    snnipetObject[request.item['url']] = contentList;
-                    chrome.storage.local.set({ text_list: snnipetObject });
+            fetchData(function (snnipetObject: object) { 
+                const pageUrl: string = request.item['url'];
+                let contentList: object[] = snnipetObject[pageUrl];
+                if (contentList !== undefined) {
+                    contentList.forEach(content => {
+                        if (content.timestamp === request.item['timestamp']) {
+                            contentList.splice(contentList.indexOf(content), 1);
+                        }
+                    });
                 }
-            })
+                snnipetObject[request.item['url']] = contentList;
+                chrome.storage.local.set({ text_list: snnipetObject });
+            });
         } else {
-            chrome.storage.local.remove('text_list');
+            chrome.storage.local.remove(KEY_TEXT_LIST);
         }
     } else if (request.update_data) { 
         updateDate(request.update_data);
@@ -65,11 +63,20 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
+function fetchData(postFunctionCallback: (snnipetObject: object) => void) { 
+    chrome.storage.local.get([KEY_TEXT_LIST], result => {
+        if (result !== undefined && result[KEY_TEXT_LIST] !== undefined) {
+            let snnipetObject: object = result[KEY_TEXT_LIST];
+            postFunctionCallback(snnipetObject);
+        }
+    });
+}
+
 // {'www.baidu.com': [{}{}]}
-function saveData(snippet: object) {
+function saveData(snippet: SnnipetObject) {
     // 保存选中的文本内容到本地缓存
-    chrome.storage.local.get(['text_list'], result => {
-        let snnipetObject: object = result['text_list'];
+    chrome.storage.local.get([KEY_TEXT_LIST], result => {
+        let snnipetObject: object = result[KEY_TEXT_LIST];
         if (snnipetObject !== undefined) {
             let snippetList: object[] = snnipetObject[snippet.url];
             if (snippetList === undefined) {
@@ -88,9 +95,9 @@ function saveData(snippet: object) {
     });
 }
 
-function updateDate(snippet: object) {
-    chrome.storage.local.get(['text_list'], result => {
-        let snnipetObject: object = result['text_list'];
+function updateDate(snippet: SnnipetObject) {
+    chrome.storage.local.get([KEY_TEXT_LIST], result => {
+        let snnipetObject: object = result[KEY_TEXT_LIST];
         if (snnipetObject !== undefined) {
             let snippetList: object[] = snnipetObject[snippet.url];
             if (snippetList !== undefined) {
