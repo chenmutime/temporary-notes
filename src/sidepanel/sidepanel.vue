@@ -31,15 +31,9 @@ function changeTitle(index: number) {
     if (snippetList !== undefined && snippetList.length > 0) {
         let newTitle: string = document.getElementById('title_' + index).value;
         snippetList[0].title = newTitle;
-        chrome.runtime.sendMessage({ update_data: snippetList[0] }).then(response => {
-            let titleNode = document.getElementById('title_' + index);
-            if (titleNode !== null) {
-                titleNode.disabled = true;
-            }
-        });
+        chrome.runtime.sendMessage({ update_data: snippetList[0] });
         return true;
     }
-    // console.log(JSON.stringify(snippetList));
 }
 
 function editTitle(index: number) {
