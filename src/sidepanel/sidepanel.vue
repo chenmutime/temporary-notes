@@ -12,9 +12,9 @@ function localFetchData() {
             // reset contentContainer.contentList
             contentContainer.contentList = [];
 
-            let snnipetObject: object = result[KEY_TEXT_LIST];
-            Object.keys(snnipetObject).forEach(url => {
-                let snippetList: object[] = snnipetObject[url];
+            let dataObject: object = result[KEY_TEXT_LIST];
+            Object.keys(dataObject).forEach(url => {
+                let snippetList: object[] = dataObject[url];
                 contentContainer.contentList.push(snippetList);
             });
         }

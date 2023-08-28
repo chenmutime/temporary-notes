@@ -39,18 +39,18 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     } else if (request.clear_data) {
         if (request.item) {
-            fetchData(function (snnipetObject: object) { 
+            fetchData(function (dataObject: object) { 
                 const pageUrl: string = request.item['url'];
-                let contentList: object[] = snnipetObject[pageUrl];
-                if (contentList !== undefined) {
-                    contentList.forEach(content => {
-                        if (content.timestamp === request.item['timestamp']) {
-                            contentList.splice(contentList.indexOf(content), 1);
+                let snnipetObjectList: object[] = dataObject[pageUrl];
+                if (snnipetObjectList) {
+                    snnipetObjectList.forEach(snnipetObject => {
+                        if (snnipetObject.timestamp === request.item['timestamp']) {
+                            snnipetObjectList.splice(snnipetObjectList.indexOf(snnipetObject), 1);
                         }
                     });
                 }
-                snnipetObject[request.item['url']] = contentList;
-                chrome.storage.local.set({ text_list: snnipetObject });
+                dataObject[request.item['url']] = snnipetObjectList;
+                chrome.storage.local.set({ text_list: dataObject });
             });
         } else {
             chrome.storage.local.remove(KEY_TEXT_LIST);
@@ -76,20 +76,20 @@ function fetchData(postFunctionCallback: (snnipetObject: object) => void) {
 function saveData(snippet: SnnipetObject) {
     // 保存选中的文本内容到本地缓存
     chrome.storage.local.get([KEY_TEXT_LIST], result => {
-        let snnipetObject: object = result[KEY_TEXT_LIST];
-        if (snnipetObject !== undefined) {
-            let snippetList: object[] = snnipetObject[snippet.url];
+        let dataObject: object = result[KEY_TEXT_LIST];
+        if (dataObject !== undefined) {
+            let snippetList: object[] = dataObject[snippet.url];
             if (snippetList === undefined) {
                 snippetList = [];
             }
             snippetList.push(snippet);
-            snnipetObject[snippet.url] = snippetList;
+            dataObject[snippet.url] = snippetList;
         } else {
-            snnipetObject = {};
+            dataObject = {};
             let snippetList: object[] = [snippet];
-            snnipetObject[snippet.url] = snippetList;
+            dataObject[snippet.url] = snippetList;
         }
-        chrome.storage.local.set({ text_list: snnipetObject }).then(function () {
+        chrome.storage.local.set({ text_list: dataObject }).then(function () {
             chrome.runtime.sendMessage({ refresh_data: true });
         });
     });
@@ -97,16 +97,16 @@ function saveData(snippet: SnnipetObject) {
 
 function updateDate(snippet: SnnipetObject) {
     chrome.storage.local.get([KEY_TEXT_LIST], result => {
-        let snnipetObject: object = result[KEY_TEXT_LIST];
-        if (snnipetObject !== undefined) {
-            let snippetList: object[] = snnipetObject[snippet.url];
+        let dataObject: object = result[KEY_TEXT_LIST];
+        if (dataObject !== undefined) {
+            let snippetList: object[] = dataObject[snippet.url];
             if (snippetList !== undefined) {
                 snippetList.forEach(function (item: object) {
                     item.title = snippet.title;
                 });
             }
         } 
-        chrome.storage.local.set({ text_list: snnipetObject }).then(function () {
+        chrome.storage.local.set({ text_list: dataObject }).then(function () {
             chrome.runtime.sendMessage({ refresh_data: true });
         });
     });
