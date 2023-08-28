@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { SnnipetObject } from '../common/SnippetObject'
 import { clipSelectedText, KEY_TEXT_LIST } from '../common/helper'
 
 let contentContainer = reactive({ contentList: [] });
@@ -17,6 +16,8 @@ function localFetchData() {
                 let snippetList: object[] = dataObject[url];
                 contentContainer.contentList.push(snippetList);
             });
+
+            
         }
     });
 }
