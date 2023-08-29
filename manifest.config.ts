@@ -17,7 +17,7 @@ export default defineManifest(async (env) => ({
   // semver is OK in "version_name"
   version_name: version,
   manifest_version: 3,
-  description: 'Effortlessly capture the essential page content and jot down ideas. Easily copy them all to the clipboard in bulk at any desired moment.',
+  description: 'You can capture text content, jot down ideas, and later copy them to the clipboard in bulk without the need to log in.',
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
     // default_popup: 'src/popup/index.html',
@@ -49,7 +49,7 @@ export default defineManifest(async (env) => ({
       resources: ['src/content-script/iframe/index.html'],
     },
   ],
-  permissions: ['storage', 'contextMenus', 'sidePanel', 'clipboardWrite'],
+  permissions: ['storage', 'contextMenus', 'sidePanel', 'clipboardWrite', 'tabs'],
   icons: {
     16: 'src/assets/logo.png',
     32: 'src/assets/logo.png',
