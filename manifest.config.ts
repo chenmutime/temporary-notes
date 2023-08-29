@@ -17,7 +17,7 @@ export default defineManifest(async (env) => ({
   // semver is OK in "version_name"
   version_name: version,
   manifest_version: 3,
-  description: 'You can capture text content, jot down ideas, and later copy them to the clipboard in bulk without the need to log in.',
+  description: 'You can quickly capture text content, jot down ideas, and later copy them to the clipboard in bulk without the need to log in.',
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
     // default_popup: 'src/popup/index.html',
