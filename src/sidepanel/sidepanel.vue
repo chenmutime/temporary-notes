@@ -157,9 +157,9 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
             <h3 class="text-gray-700 mb-4 font-bold">Clear all ?</h3>
             <div class="flex justify-center">
                 <button @click="confirmAction()"
-                    class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded mr-2">Confirm</button>
+                    class="hover:bg-red-200 text-red-500 font-bold py-1 px-2 rounded mr-2">Confirm</button>
                 <button @click="closeConfirmation()"
-                    class="bg-gray-400 hover:bg-gray-600 text-white font-bold py-1 px-2 rounded">Cancel</button>
+                    class="hover:bg-gray-200 text-gray-700 font-bold py-1 px-2 rounded">Cancel</button>
             </div>
         </div>
     </div>
