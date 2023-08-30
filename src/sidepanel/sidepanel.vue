@@ -217,11 +217,11 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                 </div>
             </view>
         </view>
-        <!-- <view v-if="contentContainer.contentList.length <= 0">
-            <view class="flex flex-col items-center justify-center">
-                <p class="font-bold my-10">There are no records here yet.</p>
-            </view>
-        </view> -->
+        <view v-if="contentContainer.contentList.length <= 0">
+            <div class="flex flex-col items-center justify-center h-screen">
+                <p class="font-bold my-10">There are no records here yet ...</p>
+            </div>
+        </view>
     </main>
 </template>
 
