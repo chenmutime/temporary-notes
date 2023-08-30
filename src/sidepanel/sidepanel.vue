@@ -187,10 +187,10 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                             <input :id="'title_' + index" type="text" class="bg-transparent focus:bg-white border-none h-6 w-11/12 p-0" :value="snippetList[0].title" @focusout="changeTitle(index)">
                         </div>
                         <div class="flex justify-center items-center mx-2">
-                            <img src="../assets/edit.svg" alt="" class="h-5 w-5 hover:bg-gray-200 rounded-lg" @click="editTitle(index)">
+                            <img src="../assets/edit.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg" @click="editTitle(index)">
                         </div>
                             <div class="flex justify-center items-center mx-2">
-                                <img src="../assets/link.svg" alt="" class="h-5 w-5 hover:bg-gray-200 rounded-lg" @click="linkUrl(snippetList[0].url)">
+                                <img src="../assets/external_link.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg" @click="linkUrl(snippetList[0].url)">
                             </div>
                     </div>
 
@@ -217,6 +217,11 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                 </div>
             </view>
         </view>
+        <!-- <view v-if="contentContainer.contentList.length <= 0">
+            <view class="flex flex-col items-center justify-center">
+                <p class="font-bold my-10">There are no records here yet.</p>
+            </view>
+        </view> -->
     </main>
 </template>
 
