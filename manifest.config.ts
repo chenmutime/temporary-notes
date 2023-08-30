@@ -20,7 +20,7 @@ export default defineManifest(async (env) => ({
   description: 'You can quickly capture text content, jot down ideas, and later copy them to the clipboard in bulk without the need to log in.',
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
-    // default_popup: 'src/popup/index.html',
+    default_popup: 'src/popup/index.html',
     default_title: 'Temporary Notes',
   },
   background: {
@@ -36,6 +36,7 @@ export default defineManifest(async (env) => ({
   // ],
   side_panel: {
     default_path: '/src/sidepanel/sidepanel.html',
+    openPanelOnActionClick: true
   },
   host_permissions: ['*://*/*'],
   options_page: 'src/options/index.html',

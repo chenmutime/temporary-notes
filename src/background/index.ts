@@ -25,11 +25,6 @@ chrome.contextMenus.onClicked.addListener(function (info) {
     });
 });
 
-
-chrome.sidePanel
-    .setPanelBehavior({ openPanelOnActionClick: true })
-    .catch((error) => console.error(error));
-
 // 接收来自其他js页面发送过来的消息
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.save_data) {
