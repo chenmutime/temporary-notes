@@ -25,16 +25,12 @@ export default defineConfig({
     Pages({
       dirs: [
         {
-          dir: 'src/pages',
-          baseRoute: '',
+          dir: 'src/setting',
+          baseRoute: 'setting',
         },
         {
-          dir: 'src/options/pages',
+          dir: 'src/options',
           baseRoute: 'options',
-        },
-        {
-          dir: 'src/popup/pages',
-          baseRoute: 'popup',
         },
         {
           dir: 'src/content-script/iframe/pages',

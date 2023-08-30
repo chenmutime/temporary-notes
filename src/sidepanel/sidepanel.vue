@@ -17,7 +17,7 @@ function localFetchData() {
                 contentContainer.contentList.push(snippetList);
             });
 
-            
+
         }
     });
 }
@@ -156,6 +156,7 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
         <div class="modal-content bg-white p-4 rounded shadow justify-center items-center text-center">
             <h3 class="text-gray-700 mb-4 font-bold">Clear all ?</h3>
             <div class="flex justify-center">
+
                 <button @click="confirmAction()"
                     class="hover:bg-red-200 text-red-500 font-bold py-1 px-2 rounded mr-2">Confirm</button>
                 <button @click="closeConfirmation()"
@@ -171,27 +172,35 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
         </div>
     </div>
     <main>
-        <div class="w-full justify-start items-start px-2">
-            <button class="mx-2 my-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded"
-                @click="showConfirmation()">Clear</button>
-            <button class="mx-2 my-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded"
-                @click="copyData()">Copy</button>
+        <div class="flex w-full px-2">
+            <div class="flex w-11/12">
+                <ElButton type="danger" class="mx-2 my-2 py-1.5 px-3" @click="showConfirmation()">Clear</ElButton>
+                <ElButton type="primary" class="mx-2 my-2 py-1.5 px-3" @click="copyData()">Copy</ElButton>
+            </div>
+            <div class="flex justify-center items-center mx-2">
+                <RouterLink to="setting/index">
+                    <img src="../assets/setting.svg" class="h-6 w-6 hover:bg-gray-200 rounded-lg">
+                </RouterLink>
+            </div>
         </div>
         <div class="border-b border-1 border-gray-300"></div>
         <view v-for="(snippetList, index) in contentContainer.contentList" :key="index">
             <view v-if="snippetList.length > 0">
                 <div class="rounded-lg overflow-hidden shadow-xl m-4 border-gray-500" :class="bg_color_arr[index % 5]">
-                    <!-- 标题，自动换行 -->
                     <div class="flex h-10 w-full" :class="title_bg_color_arr[index % 5]">
                         <div class="flex justify-center items-center w-full">
-                            <input :id="'title_' + index" type="text" class="bg-transparent focus:bg-white border-none h-6 w-11/12 p-0" :value="snippetList[0].title" @focusout="changeTitle(index)">
+                            <input :id="'title_' + index" type="text"
+                                class="bg-transparent focus:bg-white border-none h-6 w-11/12 p-0"
+                                :value="snippetList[0].title" @focusout="changeTitle(index)">
                         </div>
                         <div class="flex justify-center items-center mx-2">
-                            <img src="../assets/edit.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg" @click="editTitle(index)">
+                            <img src="../assets/edit.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg"
+                                @click="editTitle(index)">
                         </div>
-                            <div class="flex justify-center items-center mx-2">
-                                <img src="../assets/external_link.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg" @click="linkUrl(snippetList[0].url)">
-                            </div>
+                        <div class="flex justify-center items-center mx-2">
+                            <img src="../assets/external_link.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg"
+                                @click="linkUrl(snippetList[0].url)">
+                        </div>
                     </div>
 
                     <!-- 根据index获取随机颜色 -->
