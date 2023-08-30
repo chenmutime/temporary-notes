@@ -160,8 +160,8 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
     <main>
         <div class="flex w-full px-2">
             <div class="flex w-11/12">
-                <el-popconfirm width="220" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled" @confirm="clearAllData"
-                    icon-color="#626AEF" title="Are you sure about deleting all the data?">
+                <el-popconfirm width="220" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled"
+                    @confirm="clearAllData" icon-color="#626AEF" title="Are you sure about deleting all the data?">
                     <template #reference>
                         <ElButton type="danger" plain class="mx-2 my-2 py-1.5 px-3" @click="showConfirmation()">Clear
                         </ElButton>
@@ -183,17 +183,18 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                 <div class="rounded-lg overflow-hidden shadow-xl m-4 border-gray-500" :class="bg_color_arr[index % 5]">
                     <div class="flex h-10 w-full" :class="title_bg_color_arr[index % 5]">
                         <div class="flex justify-center items-center w-full">
-                            <input :id="'title_' + index" type="text"
-                                class="bg-transparent focus:bg-white border-none rounded-lg h-6 w-11/12 p-0"
-                                :value="snippetList[0].title" @focusout="changeTitle(index)">
-
+                                <input :id="'title_' + index" type="text"
+                                    class="bg-transparent focus:bg-white border-none rounded-lg h-6 w-11/12 p-0"
+                                    :value="snippetList[0].title" @focusout="changeTitle(index)">
                         </div>
                         <div class="flex justify-center items-center mr-1">
                             <ElButton :icon="Edit" size="small" circle plain @click="editTitle(index)"></ElButton>
                         </div>
                         <div class="flex justify-center items-center mr-3">
+                                <el-tooltip class="box-item" effect="light" :content="snippetList[0].url" placement="top">
                             <ElButton :icon="Link" size="small" circle plain @click="linkUrl(snippetList[0].url)">
                             </ElButton>
+                            </el-tooltip>
                         </div>
                     </div>
 
@@ -207,8 +208,6 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                                 <p class="text-gray-700 text-base text-left break-all">{{ snippet.input_text }}</p>
                             </div>
                             <div class="flex justify-end items-end mx-1 ">
-                                <!-- <img id="id_trash" src="../assets/trash.png" class="h-5 w-5 hover:bg-gray-200 rounded-lg"
-                                    @click="clearData(snippet.url, snippet.timestamp)"> -->
                                 <ElButton :icon="Delete" size="small" circle plain
                                     @click="clearData(snippet.url, snippet.timestamp)" />
                             </div>
