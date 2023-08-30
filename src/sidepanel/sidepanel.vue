@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { clipSelectedText, KEY_TEXT_LIST } from '../common/helper'
+import {
+    Delete,
+    Edit,
+    Link,
+    InfoFilled
+} from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 
 let contentContainer = reactive({ contentList: [] });
 localFetchData();
@@ -53,8 +60,9 @@ function linkUrl(url: string) {
 }
 
 function clearAllData() {
-    chrome.runtime.sendMessage({ clear_data: true });
-    contentContainer.contentList = [];
+    chrome.runtime.sendMessage({ clear_data: true }).then(() => {
+        contentContainer.contentList = [];
+    });
 }
 
 function showConfirmation() {
@@ -71,11 +79,6 @@ function closeConfirmation() {
     }
 }
 
-function confirmAction() {
-    // 在这里执行确认操作的逻辑
-    closeConfirmation();
-    clearAllData();
-}
 
 function clearData(url: string, timestamp: number) {
     let item = { url: url, timestamp: timestamp }
@@ -97,24 +100,15 @@ function copyData() {
     let data: string = formatDataToText(contentContainer.contentList);
     navigator.clipboard.writeText(data)
         .then(function () {
-            showSuccessToast();
+            // showSuccessToast();
+            ElMessage({
+                message: 'Copied!',
+                type: 'success',
+            })
         })
         .catch(function (error) {
             console.error("Error copying to clipboard:", error);
         });
-}
-
-function showSuccessToast() {
-    var container = document.getElementById("successToastContainer");
-    if (container !== null) {
-        container.classList.remove("hidden");
-        container.classList.add("flex");
-
-        setTimeout(function () {
-            container.classList.add("hidden");
-            container.classList.remove("flex");
-        }, 2000);
-    }
 }
 
 function formatDataToText(contentList: object[]) {
@@ -152,34 +146,34 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
 </script>
 
 <template>
-    <div id="confirmationModal" class="modal hidden fixed inset-0 mx-auto mt-12 w-40">
+    <!-- <div id="confirmationModal" class="modal hidden fixed inset-0 mx-auto mt-12 w-40">
         <div class="modal-content bg-white p-4 rounded shadow justify-center items-center text-center">
             <h3 class="text-gray-700 mb-4 font-bold">Clear all ?</h3>
             <div class="flex justify-center">
-
                 <button @click="confirmAction()"
                     class="hover:bg-red-200 text-red-500 font-bold py-1 px-2 rounded mr-2">Confirm</button>
                 <button @click="closeConfirmation()"
                     class="hover:bg-gray-200 text-gray-700 font-bold py-1 px-2 rounded">Cancel</button>
             </div>
         </div>
-    </div>
-    <!--  flex items-center justify-center -->
-    <div id="successToastContainer"
-        class="toast-container hidden fixed inset-0 mx-auto mt-12 w-full h-10 items-center justify-center">
-        <div id="successToast" class="toast bg-blue-400 text-white text-sm font-semibold py-2 px-4 rounded w-22">
-            Copied!
-        </div>
-    </div>
+    </div> -->
     <main>
         <div class="flex w-full px-2">
             <div class="flex w-11/12">
-                <ElButton type="danger" class="mx-2 my-2 py-1.5 px-3" @click="showConfirmation()">Clear</ElButton>
-                <ElButton type="primary" class="mx-2 my-2 py-1.5 px-3" @click="copyData()">Copy</ElButton>
+                <el-popconfirm width="220" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled" @confirm="clearAllData"
+                    icon-color="#626AEF" title="Are you sure about deleting all the data?">
+                    <template #reference>
+                        <ElButton type="danger" plain class="mx-2 my-2 py-1.5 px-3" @click="showConfirmation()">Clear
+                        </ElButton>
+                    </template>
+                </el-popconfirm>
+                <ElButton type="primary" plain class="mx-2 my-2 py-1.5 px-3" @click="copyData()">Copy</ElButton>
             </div>
-            <div class="flex justify-center items-center mx-2">
+            <div class="flex justify-center items-center mr-3">
                 <RouterLink to="setting/index">
-                    <img src="../assets/setting.svg" class="h-6 w-6 hover:bg-gray-200 rounded-lg">
+                    <el-icon size="20">
+                        <Tools />
+                    </el-icon>
                 </RouterLink>
             </div>
         </div>
@@ -190,16 +184,16 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                     <div class="flex h-10 w-full" :class="title_bg_color_arr[index % 5]">
                         <div class="flex justify-center items-center w-full">
                             <input :id="'title_' + index" type="text"
-                                class="bg-transparent focus:bg-white border-none h-6 w-11/12 p-0"
+                                class="bg-transparent focus:bg-white border-none rounded-lg h-6 w-11/12 p-0"
                                 :value="snippetList[0].title" @focusout="changeTitle(index)">
+
                         </div>
-                        <div class="flex justify-center items-center mx-2">
-                            <img src="../assets/edit.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg"
-                                @click="editTitle(index)">
+                        <div class="flex justify-center items-center mr-1">
+                            <ElButton :icon="Edit" size="small" circle plain @click="editTitle(index)"></ElButton>
                         </div>
-                        <div class="flex justify-center items-center mx-2">
-                            <img src="../assets/external_link.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg"
-                                @click="linkUrl(snippetList[0].url)">
+                        <div class="flex justify-center items-center mr-3">
+                            <ElButton :icon="Link" size="small" circle plain @click="linkUrl(snippetList[0].url)">
+                            </ElButton>
                         </div>
                     </div>
 
@@ -213,8 +207,10 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                                 <p class="text-gray-700 text-base text-left break-all">{{ snippet.input_text }}</p>
                             </div>
                             <div class="flex justify-end items-end mx-1 ">
-                                <img id="id_trash" src="../assets/trash.png" class="h-5 w-5 hover:bg-gray-200 rounded-lg"
-                                    @click="clearData(snippet.url, snippet.timestamp)">
+                                <!-- <img id="id_trash" src="../assets/trash.png" class="h-5 w-5 hover:bg-gray-200 rounded-lg"
+                                    @click="clearData(snippet.url, snippet.timestamp)"> -->
+                                <ElButton :icon="Delete" size="small" circle plain
+                                    @click="clearData(snippet.url, snippet.timestamp)" />
                             </div>
                         </div>
                         <!-- 分割线 -->

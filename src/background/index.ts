@@ -51,6 +51,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 }
                 dataObject[request.item['url']] = snnipetObjectList;
                 chrome.storage.local.set({ text_list: dataObject });
+                sendResponse({
+                    status: 'success'
+                });
             });
         } else {
             chrome.storage.local.remove(KEY_TEXT_LIST);
