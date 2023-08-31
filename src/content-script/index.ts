@@ -11,16 +11,13 @@ const iframe = new DOMParser().parseFromString(
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('received: ' + JSON.stringify(request))
-  if (request.execute_iframe) { 
-    showIframe()
-    // document.body?.contains(iframe) ? hideIframe() : showIframe()
+  if (request.execute_iframe) {
+    document.body?.contains(iframe) ? hideIframe() : showIframe()
   }
   sendResponse({
     status: 'success'
   })
 })
-
-
 function showIframe() {
   if (iframe) {
     document.body?.appendChild(iframe)

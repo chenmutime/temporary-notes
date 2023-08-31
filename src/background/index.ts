@@ -5,23 +5,8 @@ export { }
 
 
 
-// (
-//     async () => {
-//         chrome.action.onClicked.addListener(() => {
-//             console.log('clicked!!!');
-//             notifyShowIframe();
-//         });
-//     }
-// )();
-
-// (async () => {
-//     const response = await chrome.runtime.sendMessage({ execute_iframe: true });
-//     // do something with response here, not outside the function
-//     console.log(response);
-// })();
-
 async function notifyShowIframe() {
-    await chrome.runtime.sendMessage({
+    return await chrome.runtime.sendMessage({
         execute_iframe: true
     });
 }
@@ -32,11 +17,15 @@ chrome.runtime.onInstalled.addListener(() => {
         "title": "Quick Record",
         "contexts": ["selection"]
     });
+});
 
-    chrome.action.onClicked.addListener(() => {
-        console.log('clicked!!!');
-        notifyShowIframe();
-    });
+// 监听logo点击事件，打开/关闭sidebar
+chrome.action.onClicked.addListener((tab) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { execute_iframe: "true" }, function (response) {
+            console.log(response);
+        });
+    }); 
 });
 
 chrome.contextMenus.onClicked.addListener(function (info) {
@@ -61,7 +50,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     } else if (request.clear_data) {
         if (request.item) {
-            fetchData(function (dataObject: object) { 
+            fetchData(function (dataObject: object) {
                 const pageUrl: string = request.item['url'];
                 let snnipetObjectList: object[] = dataObject[pageUrl];
                 if (snnipetObjectList) {
@@ -80,7 +69,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         } else {
             chrome.storage.local.remove(KEY_TEXT_LIST);
         }
-    } else if (request.update_data) { 
+    } else if (request.update_data) {
         updateDate(request.update_data);
         sendResponse({
             status: 'success'
@@ -88,7 +77,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
-function fetchData(postFunctionCallback: (snnipetObject: object) => void) { 
+function fetchData(postFunctionCallback: (snnipetObject: object) => void) {
     chrome.storage.local.get([KEY_TEXT_LIST], result => {
         if (result !== undefined && result[KEY_TEXT_LIST] !== undefined) {
             let snnipetObject: object = result[KEY_TEXT_LIST];
@@ -130,7 +119,7 @@ function updateDate(snippet: SnnipetObject) {
                     item.title = snippet.title;
                 });
             }
-        } 
+        }
         chrome.storage.local.set({ text_list: dataObject }).then(function () {
             chrome.runtime.sendMessage({ refresh_data: true });
         });
