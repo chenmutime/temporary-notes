@@ -1,4 +1,3 @@
-import { tr } from 'element-plus/es/locale';
 import './index.scss'
 
 const src = chrome.runtime.getURL('src/content-script/iframe/index.html')
@@ -10,7 +9,6 @@ const iframe = new DOMParser().parseFromString(
 
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  console.log('received: ' + JSON.stringify(request))
   if (request.execute_iframe) {
     document.body?.contains(iframe) ? hideIframe() : showIframe()
   }

@@ -7,9 +7,7 @@ import { RouterView, RouterLink } from 'vue-router';
 <template>
     <header>
         <!-- 返回上一页 -->
-        <RouterLink to="/">
-            <img src="../assets/back.svg" alt="">
-        </RouterLink>
+
     </header>
     <main>
         <RouterView>

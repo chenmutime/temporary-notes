@@ -20,7 +20,6 @@ export default defineManifest(async (env) => ({
   description: 'You can quickly capture text content, jot down ideas, and later copy them to the clipboard in bulk without the need to log in.',
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
-    // default_popup: 'src/popup/index.html',
     default_title: 'Temporary Notes',
   },
   background: {
@@ -34,10 +33,6 @@ export default defineManifest(async (env) => ({
       run_at: 'document_end',
     },
   ],
-  // side_panel: {
-  //   default_path: '/src/sidepanel/sidepanel.html',
-  //   openPanelOnActionClick: true
-  // },
   host_permissions: ['*://*/*'],
   options_page: 'src/options/index.html',
   web_accessible_resources: [
@@ -50,7 +45,7 @@ export default defineManifest(async (env) => ({
       resources: ['src/content-script/iframe/index.html'],
     },
   ],
-  permissions: ['storage', 'contextMenus', 'sidePanel', 'clipboardWrite', 'scripting', 'activeTab', 'tabs'],
+  permissions: ['storage', 'contextMenus', 'clipboardWrite', 'activeTab', 'tabs'],
   icons: {
     16: 'src/assets/logo.png',
     32: 'src/assets/logo.png',

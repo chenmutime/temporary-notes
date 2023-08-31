@@ -25,7 +25,7 @@ chrome.action.onClicked.addListener((tab) => {
         chrome.tabs.sendMessage(tabs[0].id, { execute_iframe: "true" }, function (response) {
             console.log(response);
         });
-    }); 
+    });
 });
 
 chrome.contextMenus.onClicked.addListener(function (info) {
@@ -74,6 +74,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         sendResponse({
             status: 'success'
         });
+    } else if (request.copy_data) {
+        console.log("Copy data:", JSON.stringify(request.data));
+
+        navigator.clipboard.write(request.data)
+            .then(function () {
+                sendResponse({ status: 'success' })
+            })
+            .catch(function (error) {
+                console.error("Error copying to clipboard:", error);
+            });
     }
 });
 
