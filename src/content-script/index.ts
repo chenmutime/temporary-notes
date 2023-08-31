@@ -1,3 +1,4 @@
+import { tr } from 'element-plus/es/locale';
 import './index.scss'
 
 const src = chrome.runtime.getURL('src/content-script/iframe/index.html')
@@ -7,6 +8,27 @@ const iframe = new DOMParser().parseFromString(
   'text/html'
 ).body.firstElementChild
 
-if (iframe) {
-  document.body?.append(iframe)
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log('received: ' + JSON.stringify(request))
+  if (request.execute_iframe) { 
+    showIframe()
+    // document.body?.contains(iframe) ? hideIframe() : showIframe()
+  }
+  sendResponse({
+    status: 'success'
+  })
+})
+
+
+function showIframe() {
+  if (iframe) {
+    document.body?.appendChild(iframe)
+  }
+}
+
+function hideIframe() {
+  if (iframe) {
+    document.body?.removeChild(iframe)
+  }
 }

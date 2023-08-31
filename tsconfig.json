@@ -25,7 +25,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue"
-  ],
+, "src/background/content_script_adapter.js"  ],
   "references": [
     {
       "path": "./tsconfig.node.json"

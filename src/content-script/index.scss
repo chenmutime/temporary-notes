@@ -1,9 +1,12 @@
 .crx-iframe {
-  margin-left: 8px;
-  width: calc(100% - 8px);
-  height: auto;
+  width: 360px;
+  height: 100%;
   border: none;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
-  background-color: #fff;
+  background-color: #ddd;
+  top: 0px;
+  right: 0px;
+  position: fixed;
+  z-index: 9000000000000000000;
 }

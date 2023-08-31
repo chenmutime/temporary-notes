@@ -4,11 +4,38 @@ import { SnnipetObject } from '../common/SnippetObject'
 export { }
 
 
+
+// (
+//     async () => {
+//         chrome.action.onClicked.addListener(() => {
+//             console.log('clicked!!!');
+//             notifyShowIframe();
+//         });
+//     }
+// )();
+
+// (async () => {
+//     const response = await chrome.runtime.sendMessage({ execute_iframe: true });
+//     // do something with response here, not outside the function
+//     console.log(response);
+// })();
+
+async function notifyShowIframe() {
+    await chrome.runtime.sendMessage({
+        execute_iframe: true
+    });
+}
+
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         "id": "RecordQuickly",
         "title": "Quick Record",
         "contexts": ["selection"]
+    });
+
+    chrome.action.onClicked.addListener(() => {
+        console.log('clicked!!!');
+        notifyShowIframe();
     });
 });
 

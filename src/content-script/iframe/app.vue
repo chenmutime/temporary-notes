@@ -7,9 +7,9 @@
   >
     Content Script Iframe Header
   </header>
-
-  <RouterView></RouterView>
-
+  <main>
+    择偶为问候ID阿兽ID啊搜为还打谁弄得
+  </main>
   <footer
     aria-label="Site Footer"
     class="bg-gray-50"
