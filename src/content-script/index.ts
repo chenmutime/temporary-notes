@@ -9,13 +9,16 @@ const iframe = new DOMParser().parseFromString(
 
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.execute_iframe) {
+  if (iframe && request.execute_iframe) {
     document.body?.contains(iframe) ? hideIframe() : showIframe()
+  } else if (request.copy_data) {
+    navigator.clipboard.writeText(request.copy_data)
   }
   sendResponse({
     status: 'success'
   })
 })
+
 function showIframe() {
   if (iframe) {
     document.body?.appendChild(iframe)

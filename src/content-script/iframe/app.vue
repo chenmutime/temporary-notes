@@ -72,13 +72,6 @@ function showConfirmation() {
   }
 }
 
-function closeConfirmation() {
-  var modal = document.getElementById("confirmationModal");
-  if (modal !== null) {
-    modal.classList.add("hidden");
-  }
-}
-
 
 function clearData(url: string, timestamp: number) {
   let item = { url: url, timestamp: timestamp }
@@ -98,22 +91,18 @@ function copyData() {
   }
 
   let data: string = formatDataToText(contentContainer.contentList);
-  chrome.runtime.sendMessage({ copy_data: true, data: data }).then(function () {
-    ElMessage({
-      message: 'Copied!',
-      type: 'success',
+  // 通知content-script复制数据到剪贴板
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+
+    chrome.tabs.sendMessage(tabs[0].id, { copy_data: data }, function (response) {
+      ElMessage({
+        message: 'Copied!',
+        type: 'success',
+      })
     });
-  })
-  // navigator.clipboard.writeText(data)
-  //   .then(function () {
-  //     ElMessage({
-  //       message: 'Copied!',
-  //       type: 'success',
-  //     })
-  //   })
-  //   .catch(function (error) {
-  //     console.error("Error copying to clipboard:", error);
-  //   });
+
+  });
+
 }
 
 function formatDataToText(contentList: object[]) {
