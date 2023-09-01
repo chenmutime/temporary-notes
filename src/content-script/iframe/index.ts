@@ -14,11 +14,6 @@ const router = createRouter({
       path: '/',
       redirect: '/index'
     },
-    // {
-    //   name: 'iframe',
-    //   path: '/iframe',
-    //   component: () => import('./iframe.vue')
-    // },
     {
       name: 'index',
       path: '/index',

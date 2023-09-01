@@ -1,7 +1,7 @@
 
 <template>
-    <main>
-        <div class="flex w-full px-2">
+    <header>
+        <div class="flex w-full h-12 px-2 bg-gray-300">
             <div class="flex w-11/12">
                 <el-popconfirm width="220" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled"
                     @confirm="clearAllData" icon-color="#626AEF" title="Are you sure about deleting all the data?">
@@ -22,6 +22,8 @@
             </div>
         </div>
         <div class="border-b border-1 border-gray-300"></div>
+    </header>
+    <main>
         <view v-for="(snippetList, index) in contentContainer.contentList" :key="index">
             <view v-if="snippetList.length > 0">
                 <div class="rounded-lg overflow-hidden shadow-xl m-4 border-gray-500" :class="bg_color_arr[index % 5]">
@@ -213,7 +215,6 @@ const bg_color_arr: string[] = ["bg-green-50", "bg-yellow-50", "bg-red-50", "bg-
 const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-100", "bg-lime-100", "bg-violet-100"];
 
 </script>
-
 
 <style>
 @tailwind base;
