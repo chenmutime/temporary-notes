@@ -1,6 +1,9 @@
 # Note
 This project was forked from [https://github.com/mubaidr/vite-vue3-chrome-extension-v3]
 
+## Setup
+pnpm install element-plus
+
 ## Features
 
 ## Usage
