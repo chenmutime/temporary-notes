@@ -30,8 +30,8 @@
                     <div class="flex h-10 w-full" :class="title_bg_color_arr[index % 5]">
                         <div class="flex justify-center items-center w-full">
                             <input :id="'title_' + index" type="text"
-                                class="bg-transparent focus:bg-white border-none rounded-lg h-6 w-11/12 p-0"
-                                :value="snippetList[0].title" @focusout="changeTitle(index)">
+                                class="bg-transparent focus:bg-white text-xs border-none rounded-lg h-6 w-11/12 p-0"
+                                :value="snippetList[0].title" @focusout="saveTitle(index)">
                         </div>
                         <div class="flex justify-center items-center mr-1">
                             <ElButton :icon="Edit" size="small" circle plain @click="editTitle(index)"></ElButton>
@@ -49,11 +49,21 @@
                         <!-- 清除图标，只清除html节点，并不清除实际节点 -->
                         <div class="p-2">
                             <div class="mx-1">
-                                <p class="text-gray-400 text-xm text-left break-all"><cite>{{
+                                <p class="text-gray-400 text-xs text-left break-words"><cite>{{
                                     clipSelectedText(snippet.selected_text) }}</cite></p>
-                                <p class="text-gray-700 text-base text-left break-all">{{ snippet.input_text }}</p>
+
+                                <div :id="'p_inputText_' + index + sIndex" class="mt-1">
+                                    <p class="text-gray-700 text-xs text-left break-words">
+                                        {{ snippet.input_text }}
+                                    </p>
+                                </div>
+                                <textarea :id="'inputText_' + index + sIndex" hidden
+                                    class="mt-1 bg-transparent w-full resize-none border-none outline-0 focus:outline-none focus:shadow-outline text-gray-700 text-xs text-left break-words p-0"
+                                    :value="snippet.input_text" />
                             </div>
-                            <div class="flex justify-end items-end mx-1 ">
+                            <div class="flex justify-end items-end m-1 ">
+                                <ElButton :icon="Edit" size="small" circle plain @click="editInputText(index, sIndex)"
+                                    @blur="saveInputText(index, sIndex)"></ElButton>
                                 <ElButton :icon="Delete" size="small" circle plain
                                     @click="clearData(snippet.url, snippet.timestamp)" />
                             </div>
@@ -112,7 +122,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
-function changeTitle(index: number) {
+function saveTitle(index: number) {
     let snippetList: object[] = contentContainer.contentList[index];
     if (snippetList !== undefined && snippetList.length > 0) {
         let newTitle: string = document.getElementById('title_' + index).value;
@@ -123,10 +133,33 @@ function changeTitle(index: number) {
 }
 
 function editTitle(index: number) {
-    let titleNode = document.getElementById('title_' + index);
+    const titleNode = document.getElementById('title_' + index);
     if (titleNode !== null) {
         titleNode.select();
         titleNode.focus();
+    }
+}
+
+function editInputText(index: number, sIndex: number) {
+    const pInputTextNode = document.getElementById('p_inputText_' + index + sIndex);
+    if (pInputTextNode !== null) {
+        let currHeight = pInputTextNode.offsetHeight;
+        console.log("Paragraph height:", currHeight, "pixels");
+        const inputTextNode = document.getElementById('inputText_' + index + sIndex);
+        if (inputTextNode !== null && currHeight > 0) {
+            pInputTextNode.hidden = true
+            inputTextNode.style.height = '' + currHeight + 'px';
+            inputTextNode.hidden = false;
+            inputTextNode.focus();
+        }
+    }
+}
+
+function saveInputText(index: number, sIndex: number) {
+    const inputTextNode = document.getElementById('inputText_' + index + sIndex);
+    if (inputTextNode !== null) {
+        // 获取inputTextNode的value
+        let newText = inputTextNode.value;
     }
 }
 
