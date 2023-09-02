@@ -1,28 +1,23 @@
 
 <template>
     <header>
-        <div class="flex w-full h-12 px-2 bg-gray-300">
+        <div class="flex w-full h-12 px-2 ">
             <div class="flex w-11/12 items-center">
-                <el-popconfirm width="220" confirm-button-text="OK" c cancel-button-text="No, Thanks" :icon="InfoFilled"
+                <el-popconfirm width="220" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled"
                     @confirm="clearAllData" icon-color="#626AEF" title="Are you sure about deleting all the data?">
                     <template #reference>
-                        <ElButton size="small" class="mx-2 my-2 py-0.5 px-1.5 bg-slate-600 text-white" @click="showConfirmation()">clear all data
+                        <ElButton size="small" type="danger" round class="bg-red-300" @click="showConfirmation()">clear all data
                         </ElButton>
                     </template>
                 </el-popconfirm>
-                <ElButton size="small" class="mx-2 my-2 py-0.5 px-1.5 bg-slate-600 text-white" @click="copyData()">copy to clipboard</ElButton>
+                <ElButton size="small" type="primary" round class="bg-blue-300" @click="copyData()">copy to clipboard</ElButton>
             </div>
             <!-- Setting -->
             <div class="flex justify-center items-center mr-3">
-                <!-- <RouterLink to="/setting">
-                    <el-icon size="20">
-                        <Tools />
-                    </el-icon>
-                </RouterLink> -->
-                <el-dropdown trigger="click">
-                    <ElButton :icon="Tools" size="normal" circle plain />
+                <el-dropdown trigger="click" size="small">
+                    <ElButton :icon="Tools" size="normal" circle  />
                     <template #dropdown>
-                        <el-dropdown-menu class="bg-gray-200 ">
+                        <el-dropdown-menu class="bg-gray-200">
                             <el-dropdown-item>Customize Template</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
@@ -276,6 +271,8 @@ function copyData() {
             ElMessage({
                 message: 'Copied!',
                 type: 'success',
+                offset: 48,
+                duration: 1000
             })
         });
 
