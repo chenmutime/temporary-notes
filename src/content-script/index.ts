@@ -21,12 +21,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 function showIframe() {
   if (iframe) {
+    iframe.classList.remove('ifram-animation-out')
+    iframe.classList.add('ifram-animation-in')
     document.body?.appendChild(iframe)
   }
 }
 
 function hideIframe() {
   if (iframe) {
+    iframe.classList.add('ifram-animation-out')
+    iframe.classList.remove('ifram-animation-in')
+    iframe.addEventListener("animationend", handleAnimationEnd);
+  }
+}
+
+function handleAnimationEnd() {
+  if (iframe) {
+    iframe.removeEventListener("animationend", handleAnimationEnd);
     document.body?.removeChild(iframe)
   }
 }

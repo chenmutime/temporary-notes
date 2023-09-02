@@ -29,7 +29,7 @@
     <main>
         <view v-for="(snippetList, index) in contentContainer.contentList" :key="index">
             <view v-if="snippetList.length > 0">
-                <div class="rounded-lg overflow-hidden shadow-xl m-4 border-gray-500" :class="bg_color_arr[index % 5]">
+                <div class="rounded-lg overflow-hidden shadow-xl m-2 border-gray-500" :class="bg_color_arr[index % 5]">
                     <div class="flex h-10 w-full" :class="title_bg_color_arr[index % 5]">
                         <div class="flex justify-center items-center w-full">
                             <input :id="'title_' + index" type="text"

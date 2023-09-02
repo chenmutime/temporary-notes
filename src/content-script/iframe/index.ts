@@ -30,6 +30,7 @@ router.beforeEach((to) => {
   if (to.path === '/') return '/iframe'
 })
 app.use(router)
+
 // loading Element UI
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
