@@ -6,7 +6,6 @@ import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
-import Pages from 'vite-plugin-pages'
 import manifest from './manifest.config'
 
 // https://vitejs.dev/config/
@@ -21,23 +20,6 @@ export default defineConfig({
     crx({ manifest }),
 
     vue(),
-
-    Pages({
-      dirs: [
-        {
-          dir: 'src/setting',
-          baseRoute: 'setting',
-        },
-        {
-          dir: 'src/options',
-          baseRoute: 'options',
-        },
-        {
-          dir: 'src/content-script/iframe/pages',
-          baseRoute: 'iframe',
-        },
-      ],
-    }),
 
     AutoImport({
       imports: ['vue', 'vue-router', 'vue/macros', '@vueuse/core'],

@@ -28,7 +28,7 @@ export default defineManifest(async (env) => ({
   },
   content_scripts: [
     {
-      // all_frames: false,
+      all_frames: false,
       js: ['src/content-script/index.ts'],
       matches: ['*://*/*'],
       run_at: 'document_end',
