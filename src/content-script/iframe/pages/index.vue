@@ -21,8 +21,8 @@
                     <template #dropdown>
                         <el-dropdown-menu class="bg-gray-200">
                             <RouterLink to="/template"><el-dropdown-item :icon="Tools">Customize Template</el-dropdown-item></RouterLink>
+                                <el-dropdown-item :icon="CopyDocument" @click="copyEmail()">Feedback</el-dropdown-item>
                             <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close Sidebar</el-dropdown-item>
-                            <el-dropdown-item :icon="CopyDocument" @click="copyEmail()">Feedback</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -60,14 +60,14 @@
                                     clipSelectedText(snippet.selected_text) }}</cite></p>
                                 <!-- 用于展示文本 -->
                                 <div :id="'show_inputText_' + index + sIndex" class="mt-1">
-                                    <p class="text-gray-700 text-xs text-left break-words whitespace-pre-wrap">
+                                    <p class="text-gray-700 text-sm text-left break-words whitespace-pre-wrap">
                                         {{ snippet.input_text }}
                                     </p>
                                 </div>
                                 <!-- 用于编辑文本 -->
                                 <textarea :id="'editable_inputText_' + index + sIndex" hidden
                                     @input="autoResize(index, sIndex)"
-                                    class="mt-1 bg-transparent w-full resize-none border-none outline-0 focus:outline-none focus:shadow-outline text-gray-700 text-xs text-left break-words p-0"
+                                    class="mt-1 text-sm bg-transparent w-full resize-none border-none outline-0 focus:outline-none focus:shadow-outline text-gray-700 text-left break-words p-0"
                                     :value="snippet.input_text" />
                             </div>
                             <div class="flex justify-end items-end m-1 ">
@@ -113,7 +113,7 @@ import {
     Tools,
     Setting,
     CircleCloseFilled,
-    CopyDocument
+    CopyDocument,
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
