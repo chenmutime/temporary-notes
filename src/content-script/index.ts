@@ -13,6 +13,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     document.body?.contains(iframe) ? hideIframe() : showIframe()
   } else if (request.copy_data) {
     navigator.clipboard.writeText(request.copy_data)
+  } else if (request.close_sidebar) { 
+    console.log('close_sidebar')
+    hideIframe()
   }
   sendResponse({
     status: 'success'

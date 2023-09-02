@@ -6,19 +6,23 @@
                 <el-popconfirm width="220" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled"
                     @confirm="clearAllData" icon-color="#626AEF" title="Are you sure about deleting all the data?">
                     <template #reference>
-                        <ElButton size="small" type="danger" round class="bg-red-300" @click="showConfirmation()">clear all data
+                        <ElButton size="small" type="danger" round class="bg-red-300" @click="showConfirmation()">clear all
+                            data
                         </ElButton>
                     </template>
                 </el-popconfirm>
-                <ElButton size="small" type="primary" round class="bg-blue-300" @click="copyData()">copy to clipboard</ElButton>
+                <ElButton size="small" type="primary" round class="bg-blue-300" @click="copyData()">copy to clipboard
+                </ElButton>
             </div>
             <!-- Setting -->
             <div class="flex justify-center items-center mr-3">
                 <el-dropdown trigger="click" size="small">
-                    <ElButton :icon="Tools" size="normal" circle  />
+                    <ElButton :icon="Setting" size="normal" circle />
                     <template #dropdown>
                         <el-dropdown-menu class="bg-gray-200">
-                            <el-dropdown-item>Customize Template</el-dropdown-item>
+                            <el-dropdown-item :icon="Tools">Customize Template</el-dropdown-item>
+                            <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close
+                                Panel</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -61,7 +65,8 @@
                                     </p>
                                 </div>
                                 <!-- 用于编辑文本 -->
-                                <textarea :id="'editable_inputText_' + index + sIndex" hidden @input="autoResize(index, sIndex)"
+                                <textarea :id="'editable_inputText_' + index + sIndex" hidden
+                                    @input="autoResize(index, sIndex)"
                                     class="mt-1 bg-transparent w-full resize-none border-none outline-0 focus:outline-none focus:shadow-outline text-gray-700 text-xs text-left break-words p-0"
                                     :value="snippet.input_text" />
                             </div>
@@ -104,6 +109,8 @@ import {
     Check,
     Close,
     Tools,
+    Setting,
+    CircleCloseFilled,
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
@@ -309,6 +316,18 @@ function formatDataToText(contentList: object[]) {
 
     return formattedText;
 }
+
+// send message to content-script
+function closeSideBar() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+
+        chrome.tabs.sendMessage(tabs[0].id, { close_sidebar: true }, function (response) {
+            console.log(JSON.stringify(response));
+        });
+
+    });
+}
+
 const bg_color_arr: string[] = ["bg-green-50", "bg-yellow-50", "bg-red-50", "bg-lime-50", "bg-violet-50"];
 const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-100", "bg-lime-100", "bg-violet-100"];
 
@@ -317,5 +336,4 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
 <style>
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
-</style>
+@tailwind utilities;</style>
