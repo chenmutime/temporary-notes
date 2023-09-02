@@ -20,7 +20,7 @@
                     <ElButton :icon="Setting" size="normal" circle />
                     <template #dropdown>
                         <el-dropdown-menu class="bg-gray-200">
-                            <el-dropdown-item :icon="Tools">Customize Template</el-dropdown-item>
+                            <RouterLink to="/template"><el-dropdown-item :icon="Tools">Customize Template</el-dropdown-item></RouterLink>
                             <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close
                                 Panel</el-dropdown-item>
                         </el-dropdown-menu>
@@ -71,12 +71,14 @@
                                     :value="snippet.input_text" />
                             </div>
                             <div class="flex justify-end items-end m-1 ">
+                                <!-- 进入编辑状态时展示 -->
                                 <ElButton :id="'check_btn_' + index + sIndex" hidden :icon="Check" size="small" circle plain
                                     @click="saveInputText(index, sIndex)"></ElButton>
                                 <ElButton :id="'close_btn_' + index + sIndex" hidden :icon="Close" size="small" circle plain
                                     @click="cancelInputText(index, sIndex)"></ElButton>
+                                <!-- 进入展示状态时展示 -->
                                 <ElButton :id="'edit_btn_' + index + sIndex" :icon="Edit" size="small" circle plain
-                                    @click="editInputText(index, sIndex)"> </ElButton>
+                                    @click="editInputText(index, sIndex)"></ElButton>
                                 <ElButton :icon="Delete" size="small" circle plain
                                     @click="clearData(snippet.url, snippet.timestamp)" />
                             </div>

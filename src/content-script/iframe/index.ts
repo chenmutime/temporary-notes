@@ -20,9 +20,9 @@ const router = createRouter({
       component: () => import('./pages/index.vue')
     },
     {
-      name: 'setting',
-      path: '/setting',
-      component: () => import('./pages/setting.vue')
+      name: 'template',
+      path: '/template',
+      component: () => import('./pages/template.vue')
     }
   ]
 })
