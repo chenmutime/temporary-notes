@@ -46,6 +46,12 @@ function editTitle(index: number) {
     }
 }
 
+function linkUrl(url: string) {
+    chrome.tabs.create({
+        url: url
+    });
+}
+
 function clearAllData() {
     chrome.runtime.sendMessage({ clear_data: true });
     contentContainer.contentList = [];
@@ -151,9 +157,9 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
             <h3 class="text-gray-700 mb-4 font-bold">Clear all ?</h3>
             <div class="flex justify-center">
                 <button @click="confirmAction()"
-                    class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded mr-2">Confirm</button>
+                    class="hover:bg-red-200 text-red-500 font-bold py-1 px-2 rounded mr-2">Confirm</button>
                 <button @click="closeConfirmation()"
-                    class="bg-gray-400 hover:bg-gray-600 text-white font-bold py-1 px-2 rounded">Cancel</button>
+                    class="hover:bg-gray-200 text-gray-700 font-bold py-1 px-2 rounded">Cancel</button>
             </div>
         </div>
     </div>
@@ -174,15 +180,18 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
         <div class="border-b border-1 border-gray-300"></div>
         <view v-for="(snippetList, index) in contentContainer.contentList" :key="index">
             <view v-if="snippetList.length > 0">
-                <div class="rounded overflow-hidden shadow-xl m-4 border-gray-500" :class="bg_color_arr[index % 5]">
+                <div class="rounded-lg overflow-hidden shadow-xl m-4 border-gray-500" :class="bg_color_arr[index % 5]">
                     <!-- 标题，自动换行 -->
                     <div class="flex h-10 w-full" :class="title_bg_color_arr[index % 5]">
                         <div class="flex justify-center items-center w-full">
                             <input :id="'title_' + index" type="text" class="bg-transparent focus:bg-white border-none h-6 w-11/12 p-0" :value="snippetList[0].title" @focusout="changeTitle(index)">
                         </div>
                         <div class="flex justify-center items-center mx-2">
-                            <img src="../assets/edit.svg" alt="" class="h-5 w-5 hover:bg-gray-200 rounded-lg" @click="editTitle(index)">
+                            <img src="../assets/edit.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg" @click="editTitle(index)">
                         </div>
+                            <div class="flex justify-center items-center mx-2">
+                                <img src="../assets/external_link.svg" alt="" class="h-6 w-6 hover:bg-gray-200 rounded-lg" @click="linkUrl(snippetList[0].url)">
+                            </div>
                     </div>
 
                     <!-- 根据index获取随机颜色 -->
@@ -207,6 +216,11 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
                     </view>
                 </div>
             </view>
+        </view>
+        <view v-if="contentContainer.contentList.length <= 0">
+            <div class="flex flex-col items-center justify-center h-screen">
+                <p class="font-bold my-10">There are no records here yet ...</p>
+            </div>
         </view>
     </main>
 </template>
