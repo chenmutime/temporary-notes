@@ -36,7 +36,6 @@ chrome.contextMenus.onClicked.addListener(function (info) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.save_data) {
         saveData(request.save_data);
-        console.log('sending');
         sendResponse({
             status: 'success'
         });
@@ -117,7 +116,7 @@ function updateData(snippet: SnnipetObject) {
             }
         }
         chrome.storage.local.set({ text_list: dataObject }).then(function () {
-            console.log('update data!');
+            // console.log('update data!');
             // chrome.runtime.sendMessage({ refresh_data: true });
         });
     });

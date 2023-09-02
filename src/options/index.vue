@@ -22,7 +22,6 @@ function submitText() {
   let content = new SnnipetObject(url, url, selectedText, inputText);
   // 将selectedText和url发送到background.js
   chrome.runtime.sendMessage({ save_data: content }, (res) => {
-    console.log('reciving');
     window.close();
   });
 }
