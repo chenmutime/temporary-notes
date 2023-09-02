@@ -21,8 +21,7 @@
                     <template #dropdown>
                         <el-dropdown-menu class="bg-gray-200">
                             <RouterLink to="/template"><el-dropdown-item :icon="Tools">Customize Template</el-dropdown-item></RouterLink>
-                            <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close
-                                Panel</el-dropdown-item>
+                            <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close Sidebar</el-dropdown-item>
                             <el-dropdown-item :icon="CopyDocument" @click="copyEmail()">Feedback</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
