@@ -66,7 +66,7 @@
                                     </p>
                                 </div>
                                 <!-- 用于编辑文本 -->
-                                <textarea :id="'editable_inputText_' + index + sIndex" hidden
+                                <textarea :id="'editable_inputText_' + index + sIndex" hidden @input="autoResize(index, sIndex)"
                                     class="mt-1 bg-transparent w-full resize-none border-none outline-0 focus:outline-none focus:shadow-outline text-gray-700 text-xs text-left break-words p-0"
                                     :value="snippet.input_text" />
                             </div>
@@ -127,7 +127,6 @@ function localFetchData() {
                 contentContainer.contentList.push(snippetList);
             });
 
-
         }
     });
 }
@@ -158,7 +157,7 @@ function editTitle(index: number) {
 function editInputText(index: number, sIndex: number) {
     const pNode = document.getElementById('show_inputText_' + index + sIndex);
     if (pNode !== null) {
-        let currHeight = pNode.offsetHeight > 50 ? pNode.offsetHeight : 50;
+        let currHeight = pNode.offsetHeight > 40 ? pNode.offsetHeight : 40;
         const textareaNode = document.getElementById('editable_inputText_' + index + sIndex);
         if (textareaNode !== null) {
             const editNode = document.getElementById('edit_btn_' + index + sIndex);
@@ -176,6 +175,14 @@ function editInputText(index: number, sIndex: number) {
             textareaNode.hidden = false;
             textareaNode.focus();
         }
+    }
+}
+
+function autoResize(index: number, sIndex: number) {
+    const textareaNode = document.getElementById('editable_inputText_' + index + sIndex);
+    if (textareaNode !== null) {
+        textareaNode.style.height = "auto";
+        textareaNode.style.height = textareaNode.scrollHeight + "px";
     }
 }
 
