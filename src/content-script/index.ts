@@ -14,8 +14,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   } else if (request.copy_data) {
     navigator.clipboard.writeText(request.copy_data)
   } else if (request.close_sidebar) { 
-    console.log('close_sidebar')
     hideIframe()
+  } else if (request.copy_email) {
+    navigator.clipboard.writeText(request.copy_email)
   }
   sendResponse({
     status: 'success'

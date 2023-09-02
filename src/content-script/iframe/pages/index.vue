@@ -23,6 +23,7 @@
                             <RouterLink to="/template"><el-dropdown-item :icon="Tools">Customize Template</el-dropdown-item></RouterLink>
                             <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close
                                 Panel</el-dropdown-item>
+                            <el-dropdown-item :icon="CopyDocument" @click="copyEmail()">Feedback</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -113,6 +114,7 @@ import {
     Tools,
     Setting,
     CircleCloseFilled,
+    CopyDocument
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
@@ -287,6 +289,21 @@ function copyData() {
 
     });
 
+}
+
+function copyEmail() {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+
+        chrome.tabs.sendMessage(tabs[0].id, { copy_email: 'chenmutime@outlook.com' }, function (response) {
+            ElMessage({
+                message: 'Email copied!',
+                type: 'success',
+                offset: 48,
+                duration: 2000
+            })
+        });
+
+    });
 }
 
 function formatDataToText(contentList: object[]) {
