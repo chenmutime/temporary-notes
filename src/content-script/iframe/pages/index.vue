@@ -2,23 +2,31 @@
 <template>
     <header>
         <div class="flex w-full h-12 px-2 bg-gray-300">
-            <div class="flex w-11/12">
-                <el-popconfirm width="220" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled"
+            <div class="flex w-11/12 items-center">
+                <el-popconfirm width="220" confirm-button-text="OK" c cancel-button-text="No, Thanks" :icon="InfoFilled"
                     @confirm="clearAllData" icon-color="#626AEF" title="Are you sure about deleting all the data?">
                     <template #reference>
-                        <ElButton type="danger" plain class="mx-2 my-2 py-1.5 px-3" @click="showConfirmation()">Clear
+                        <ElButton size="small" class="mx-2 my-2 py-0.5 px-1.5 bg-slate-600 text-white" @click="showConfirmation()">clear all data
                         </ElButton>
                     </template>
                 </el-popconfirm>
-                <ElButton type="primary" plain class="mx-2 my-2 py-1.5 px-3" @click="copyData()">Copy</ElButton>
+                <ElButton size="small" class="mx-2 my-2 py-0.5 px-1.5 bg-slate-600 text-white" @click="copyData()">copy to clipboard</ElButton>
             </div>
             <!-- Setting -->
             <div class="flex justify-center items-center mr-3">
-                <RouterLink to="/setting">
+                <!-- <RouterLink to="/setting">
                     <el-icon size="20">
                         <Tools />
                     </el-icon>
-                </RouterLink>
+                </RouterLink> -->
+                <el-dropdown trigger="click">
+                    <ElButton :icon="Tools" size="normal" circle plain />
+                    <template #dropdown>
+                        <el-dropdown-menu class="bg-gray-200 ">
+                            <el-dropdown-item>Customize Template</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
             </div>
         </div>
         <div class="border-b border-1 border-gray-300"></div>
@@ -53,7 +61,7 @@
                                     clipSelectedText(snippet.selected_text) }}</cite></p>
                                 <!-- 用于展示文本 -->
                                 <div :id="'show_inputText_' + index + sIndex" class="mt-1">
-                                    <p class="text-gray-700 text-xs text-left break-words whitespace-pre-wrap" >
+                                    <p class="text-gray-700 text-xs text-left break-words whitespace-pre-wrap">
                                         {{ snippet.input_text }}
                                     </p>
                                 </div>
@@ -65,8 +73,8 @@
                             <div class="flex justify-end items-end m-1 ">
                                 <ElButton :id="'check_btn_' + index + sIndex" hidden :icon="Check" size="small" circle plain
                                     @click="saveInputText(index, sIndex)"></ElButton>
-                                    <ElButton :id="'close_btn_' + index + sIndex" hidden :icon="Close" size="small" circle plain
-                                        @click="cancelInputText(index, sIndex)"></ElButton>
+                                <ElButton :id="'close_btn_' + index + sIndex" hidden :icon="Close" size="small" circle plain
+                                    @click="cancelInputText(index, sIndex)"></ElButton>
                                 <ElButton :id="'edit_btn_' + index + sIndex" :icon="Edit" size="small" circle plain
                                     @click="editInputText(index, sIndex)"> </ElButton>
                                 <ElButton :icon="Delete" size="small" circle plain
@@ -99,7 +107,8 @@ import {
     Link,
     InfoFilled,
     Check,
-    Close
+    Close,
+    Tools,
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
