@@ -19,11 +19,10 @@ document.addEventListener('keydown', function (event) {
 });
 
 function submitText() {
-
   let content = new SnnipetObject(url, url, selectedText, inputText);
   // 将selectedText和url发送到background.js
-  chrome.runtime.sendMessage({ save_data: content }).then(function (response) {
-    // 关闭浮窗
+  chrome.runtime.sendMessage({ save_data: content }, (res) => {
+    console.log('reciving');
     window.close();
   });
 }
@@ -38,7 +37,7 @@ onMounted(function () {
   <!-- 定义一个面板，位于屏幕正中央 -->
   <main>
     <div class="w-full justify-center text-center items-center">
-      <p class="text-gray-400 text-xm text-left m-3 h-16"><cite>{{ viewSelectedText }}</cite></p>
+      <p class="text-gray-400 text-xm text-left m-3 h-16 break-words whitespace-pre-wrap" >{{ viewSelectedText }}</p>
       <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-28 text-sm items-center resize-none border-gray-200 outline-gray-200 bg-gray-50" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
     </div>
     <div class="w-full justify-end text-right items-end" >

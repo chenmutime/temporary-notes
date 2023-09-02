@@ -49,21 +49,26 @@
                         <!-- 清除图标，只清除html节点，并不清除实际节点 -->
                         <div class="p-2">
                             <div class="mx-1">
-                                <p class="text-gray-400 text-xs text-left break-words"><cite>{{
+                                <p class="text-gray-400 text-xs text-left break-words "><cite class="whitespace-pre-wrap">{{
                                     clipSelectedText(snippet.selected_text) }}</cite></p>
-
-                                <div :id="'p_inputText_' + index + sIndex" class="mt-1">
-                                    <p class="text-gray-700 text-xs text-left break-words">
+                                <!-- 用于展示文本 -->
+                                <div :id="'show_inputText_' + index + sIndex" class="mt-1">
+                                    <p class="text-gray-700 text-xs text-left break-words whitespace-pre-wrap" >
                                         {{ snippet.input_text }}
                                     </p>
                                 </div>
-                                <textarea :id="'inputText_' + index + sIndex" hidden
+                                <!-- 用于编辑文本 -->
+                                <textarea :id="'editable_inputText_' + index + sIndex" hidden
                                     class="mt-1 bg-transparent w-full resize-none border-none outline-0 focus:outline-none focus:shadow-outline text-gray-700 text-xs text-left break-words p-0"
                                     :value="snippet.input_text" />
                             </div>
                             <div class="flex justify-end items-end m-1 ">
-                                <ElButton :icon="Edit" size="small" circle plain @click="editInputText(index, sIndex)"
-                                    @blur="saveInputText(index, sIndex)"></ElButton>
+                                <ElButton :id="'check_btn_' + index + sIndex" hidden :icon="Check" size="small" circle plain
+                                    @click="saveInputText(index, sIndex)"></ElButton>
+                                    <ElButton :id="'close_btn_' + index + sIndex" hidden :icon="Close" size="small" circle plain
+                                        @click="cancelInputText(index, sIndex)"></ElButton>
+                                <ElButton :id="'edit_btn_' + index + sIndex" :icon="Edit" size="small" circle plain
+                                    @click="editInputText(index, sIndex)"> </ElButton>
                                 <ElButton :icon="Delete" size="small" circle plain
                                     @click="clearData(snippet.url, snippet.timestamp)" />
                             </div>
@@ -92,7 +97,9 @@ import {
     Delete,
     Edit,
     Link,
-    InfoFilled
+    InfoFilled,
+    Check,
+    Close
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
@@ -128,7 +135,6 @@ function saveTitle(index: number) {
         let newTitle: string = document.getElementById('title_' + index).value;
         snippetList[0].title = newTitle;
         chrome.runtime.sendMessage({ update_data: snippetList[0] });
-        return true;
     }
 }
 
@@ -141,25 +147,71 @@ function editTitle(index: number) {
 }
 
 function editInputText(index: number, sIndex: number) {
-    const pInputTextNode = document.getElementById('p_inputText_' + index + sIndex);
-    if (pInputTextNode !== null) {
-        let currHeight = pInputTextNode.offsetHeight;
-        console.log("Paragraph height:", currHeight, "pixels");
-        const inputTextNode = document.getElementById('inputText_' + index + sIndex);
-        if (inputTextNode !== null && currHeight > 0) {
-            pInputTextNode.hidden = true
-            inputTextNode.style.height = '' + currHeight + 'px';
-            inputTextNode.hidden = false;
-            inputTextNode.focus();
+    const pNode = document.getElementById('show_inputText_' + index + sIndex);
+    if (pNode !== null) {
+        let currHeight = pNode.offsetHeight > 50 ? pNode.offsetHeight : 50;
+        const textareaNode = document.getElementById('editable_inputText_' + index + sIndex);
+        if (textareaNode !== null) {
+            const editNode = document.getElementById('edit_btn_' + index + sIndex);
+            const checkNode = document.getElementById('check_btn_' + index + sIndex);
+            const closeNode = document.getElementById('close_btn_' + index + sIndex);
+            if (checkNode !== null && editNode !== null && closeNode !== null) {
+                checkNode.hidden = false;
+                closeNode.hidden = false;
+                editNode.hidden = true;
+            }
+
+            textareaNode.innerText = pNode.innerText;
+            pNode.hidden = true
+            textareaNode.style.minHeight = '' + currHeight + 'px';
+            textareaNode.hidden = false;
+            textareaNode.focus();
         }
     }
 }
 
 function saveInputText(index: number, sIndex: number) {
-    const inputTextNode = document.getElementById('inputText_' + index + sIndex);
-    if (inputTextNode !== null) {
+    const pNode = document.getElementById('show_inputText_' + index + sIndex);
+    const textareaNode = document.getElementById('editable_inputText_' + index + sIndex);
+    if (pNode !== null && textareaNode !== null) {
+        const editNode = document.getElementById('edit_btn_' + index + sIndex);
+        const checkNode = document.getElementById('check_btn_' + index + sIndex);
+        const closeNode = document.getElementById('close_btn_' + index + sIndex);
+        if (checkNode !== null && editNode !== null && closeNode !== null) {
+            checkNode.hidden = true;
+            closeNode.hidden = true;
+            editNode.hidden = false;
+        }
+
         // 获取inputTextNode的value
-        let newText = inputTextNode.value;
+        let newText = textareaNode.value;
+        pNode.innerText = newText;
+        textareaNode.hidden = true;
+        pNode.hidden = false;
+
+        // TODO 通知background.js更新newText
+        let snippetList: object[] = contentContainer.contentList[index];
+        if (snippetList !== undefined && snippetList.length > 0) {
+            snippetList[sIndex].input_text = newText;
+            chrome.runtime.sendMessage({ update_data: snippetList[sIndex] });
+        }
+    }
+}
+
+function cancelInputText(index: number, sIndex: number) {
+    const pNode = document.getElementById('show_inputText_' + index + sIndex);
+    const textareaNode = document.getElementById('editable_inputText_' + index + sIndex);
+    if (pNode !== null && textareaNode !== null) {
+        const editNode = document.getElementById('edit_btn_' + index + sIndex);
+        const checkNode = document.getElementById('check_btn_' + index + sIndex);
+        const closeNode = document.getElementById('close_btn_' + index + sIndex);
+        if (checkNode !== null && editNode !== null && closeNode !== null) {
+            checkNode.hidden = true;
+            closeNode.hidden = true;
+            editNode.hidden = false;
+        }
+        pNode.hidden = false;
+        textareaNode.hidden = true;
     }
 }
 

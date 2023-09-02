@@ -36,6 +36,7 @@ chrome.contextMenus.onClicked.addListener(function (info) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.save_data) {
         saveData(request.save_data);
+        console.log('sending');
         sendResponse({
             status: 'success'
         });
@@ -61,7 +62,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             chrome.storage.local.remove(KEY_TEXT_LIST);
         }
     } else if (request.update_data) {
-        updateDate(request.update_data);
+        updateData(request.update_data);
         sendResponse({
             status: 'success'
         });
@@ -100,19 +101,24 @@ function saveData(snippet: SnnipetObject) {
     });
 }
 
-function updateDate(snippet: SnnipetObject) {
+function updateData(snippet: SnnipetObject) {
     chrome.storage.local.get([KEY_TEXT_LIST], result => {
         let dataObject: object = result[KEY_TEXT_LIST];
         if (dataObject !== undefined) {
             let snippetList: object[] = dataObject[snippet.url];
+            // 更新组内每个snippet的title
             if (snippetList !== undefined) {
                 snippetList.forEach(function (item: object) {
                     item.title = snippet.title;
+                    if (item.timestamp === snippet.timestamp) { 
+                        item.input_text = snippet.input_text;
+                    }
                 });
             }
         }
         chrome.storage.local.set({ text_list: dataObject }).then(function () {
-            chrome.runtime.sendMessage({ refresh_data: true });
+            console.log('update data!');
+            // chrome.runtime.sendMessage({ refresh_data: true });
         });
     });
 }
