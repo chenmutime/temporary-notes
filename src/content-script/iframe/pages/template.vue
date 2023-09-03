@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header class="flex h-12 px-2 bg-gray-300 items-center ">
+    <el-header class="flex h-12 px-2 items-center ">
         <!-- 返回上一页 -->
         <router-link to="/">
           <el-icon size="20" class="mx-2 my-2">
@@ -8,6 +8,7 @@
           </el-icon>
         </router-link>
     </el-header>
+          <div class="border-b border-1 border-gray-300"></div>
     <el-main>
       
     </el-main>

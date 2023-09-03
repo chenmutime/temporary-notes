@@ -1,7 +1,7 @@
-
 <template>
     <header>
         <div class="flex w-full h-12 px-2 ">
+            <!-- Button -->
             <div class="flex w-11/12 items-center">
                 <el-popconfirm width="220" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled"
                     @confirm="clearAllData" icon-color="#626AEF" title="Are you sure about deleting all the data?">
@@ -30,8 +30,8 @@
                 </el-dropdown>
             </div>
         </div>
-        <div class="border-b border-1 border-gray-300"></div>
     </header>
+            <div class="border-b border-1 border-gray-300"></div>
     <main>
         <view v-for="(snippetList, index) in contentContainer.contentList" :key="index">
             <view v-if="snippetList.length > 0">
@@ -95,8 +95,8 @@
             </view>
         </view>
         <view v-if="contentContainer.contentList.length <= 0">
-            <div class="flex flex-col items-center justify-center h-screen">
-                <p class="font-bold my-10">There are no records here yet ...</p>
+            <div class="flex flex-col items-center justify-center">
+                <el-empty description="There are no records here yet" />
             </div>
         </view>
     </main>
@@ -124,10 +124,10 @@ localFetchData();
 
 function localFetchData() {
     chrome.storage.local.get([KEY_TEXT_LIST]).then((result) => {
+        // reset contentContainer.contentList
+        contentContainer.contentList = [];
+        
         if (result !== undefined && result[KEY_TEXT_LIST] !== undefined) {
-            // reset contentContainer.contentList
-            contentContainer.contentList = [];
-
             let dataObject: object = result[KEY_TEXT_LIST];
             Object.keys(dataObject).forEach(url => {
                 let snippetList: object[] = dataObject[url];
@@ -355,6 +355,7 @@ function closeSideBar() {
 
     });
 }
+
 
 const bg_color_arr: string[] = ["bg-green-50", "bg-yellow-50", "bg-red-50", "bg-lime-50", "bg-violet-50"];
 const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-100", "bg-lime-100", "bg-violet-100"];
