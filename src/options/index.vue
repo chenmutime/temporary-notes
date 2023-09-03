@@ -2,6 +2,7 @@
 import { clipSelectedText } from '../common/helper'
 import { SnnipetObject } from '../common/SnippetObject'
 
+let errorMsg = ref('')
 let inputText: string;
 // 获取URL中的查询参数
 const queryString = window.location.search;
@@ -22,7 +23,12 @@ function submitText() {
   let content = new SnnipetObject(url, url, selectedText, inputText);
   // 将selectedText和url发送到background.js
   chrome.runtime.sendMessage({ save_data: content }, (res) => {
-    window.close();
+    if (res.status) {
+      window.close();
+    } else {
+      // TODO 警告信息，数据保存失败
+      errorMsg.value = 'Warning: The storage space is used up.';
+    }
   });
 }
 
@@ -36,11 +42,15 @@ onMounted(function () {
   <!-- 定义一个面板，位于屏幕正中央 -->
   <main>
     <div class="w-full justify-center text-center items-center">
-      <p class="text-gray-400 text-xm text-left m-3 h-16 break-words whitespace-pre-wrap" >{{ viewSelectedText }}</p>
-      <textarea v-model="inputText" class="p-1 m-1 w-11/12 h-28 text-sm items-center resize-none border-gray-200 outline-gray-200 bg-gray-50" placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
+      <p class="text-gray-400 text-xm text-left m-3 h-16 break-words whitespace-pre-wrap">{{ viewSelectedText }}</p>
+      <textarea v-model="inputText"
+        class="p-1 m-1 w-11/12 h-28 text-sm items-center resize-none border-gray-200 outline-gray-200 bg-gray-50"
+        placeholder="Enter your thoughts. (Ctrl+Enter)"></textarea>
     </div>
-    <div class="w-full justify-end text-right items-end" >
-        <button class="mx-4 my-1 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded" @click="submitText()">Submit</button>
+    <div class="flex w-full">
+      <button class="mx-4 my-1 bg-green-500 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded"
+        @click="submitText()">Submit</button>
+      <p class="text-red-400 text-xs">{{ errorMsg }}</p>
     </div>
   </main>
 </template>
@@ -48,5 +58,4 @@ onMounted(function () {
 <style>
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
-</style>
+@tailwind utilities;</style>

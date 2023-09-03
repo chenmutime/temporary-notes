@@ -20,9 +20,11 @@
                     <ElButton :icon="Setting" size="normal" circle />
                     <template #dropdown>
                         <el-dropdown-menu class="bg-gray-200">
-                            <RouterLink to="/template"><el-dropdown-item :icon="Tools">Customize Template</el-dropdown-item></RouterLink>
-                                <el-dropdown-item :icon="CopyDocument" @click="copyEmail()">Feedback</el-dropdown-item>
-                            <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close Sidebar</el-dropdown-item>
+                            <RouterLink to="/template"><el-dropdown-item :icon="Tools">Customize Template</el-dropdown-item>
+                            </RouterLink>
+                            <el-dropdown-item :icon="CopyDocument" @click="copyEmail()">Feedback</el-dropdown-item>
+                            <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close
+                                Sidebar</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -195,26 +197,34 @@ function saveInputText(index: number, sIndex: number) {
     const pNode = document.getElementById('show_inputText_' + index + sIndex);
     const textareaNode = document.getElementById('editable_inputText_' + index + sIndex);
     if (pNode !== null && textareaNode !== null) {
-        const editNode = document.getElementById('edit_btn_' + index + sIndex);
-        const checkNode = document.getElementById('check_btn_' + index + sIndex);
-        const closeNode = document.getElementById('close_btn_' + index + sIndex);
-        if (checkNode !== null && editNode !== null && closeNode !== null) {
-            checkNode.hidden = true;
-            closeNode.hidden = true;
-            editNode.hidden = false;
-        }
 
         // 获取inputTextNode的value
         let newText = textareaNode.value;
-        pNode.innerText = newText;
-        textareaNode.hidden = true;
-        pNode.hidden = false;
-
+        
         // TODO 通知background.js更新newText
         let snippetList: object[] = contentContainer.contentList[index];
         if (snippetList !== undefined && snippetList.length > 0) {
             snippetList[sIndex].input_text = newText;
-            chrome.runtime.sendMessage({ update_data: snippetList[sIndex] });
+            chrome.runtime.sendMessage({ update_data: snippetList[sIndex] }, (res) => {
+                if (res.status) {
+                    const editNode = document.getElementById('edit_btn_' + index + sIndex);
+                    const checkNode = document.getElementById('check_btn_' + index + sIndex);
+                    const closeNode = document.getElementById('close_btn_' + index + sIndex);
+                    if (checkNode !== null && editNode !== null && closeNode !== null) {
+                        checkNode.hidden = true;
+                        closeNode.hidden = true;
+                        editNode.hidden = false;
+                    }
+                    
+                    pNode.innerText = newText;
+                    textareaNode.hidden = true;
+                    pNode.hidden = false;
+                } else {
+                    textareaNode.focus()
+                    // TODO 警告信息，数据保存失败
+                    ElMessage.error('Warning: The storage space is used up.')
+                }
+            });
         }
     }
 }
@@ -258,7 +268,7 @@ function showConfirmation() {
 
 function clearData(url: string, timestamp: number) {
     let item = { url: url, timestamp: timestamp }
-    chrome.runtime.sendMessage({ clear_data: true, item: item });
+    chrome.runtime.sendMessage({ clear_data: true, snippet: item });
     contentContainer.contentList.forEach(snippetList => {
         snippetList.forEach(item => {
             if (item.url === url && item.timestamp === timestamp) {
@@ -291,7 +301,7 @@ function copyData() {
 }
 
 function copyEmail() {
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 
         chrome.tabs.sendMessage(tabs[0].id, { copy_email: 'chenmutime@outlook.com' }, function (response) {
             ElMessage({

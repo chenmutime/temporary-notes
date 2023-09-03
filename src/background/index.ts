@@ -20,11 +20,9 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 chrome.contextMenus.onClicked.addListener(function (info) {
-    // 当前页面的url
-    const url = info?.pageUrl;
     chrome.windows.create({
         type: 'popup',
-        url: '/src/options/index.html?selectedText=' + info.selectionText + '&url=' + url,
+        url: '/src/options/index.html?selectedText=' + info.selectionText + '&url=' + info?.pageUrl,
         width: 350,
         height: 300,
         left: 700,
@@ -33,25 +31,31 @@ chrome.contextMenus.onClicked.addListener(function (info) {
 });
 
 // 接收来自其他js页面发送过来的消息
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.save_data) {
-        saveData(request.save_data);
-        sendResponse({
-            status: 'success'
-        });
+        (async () => {
+            const result = await saveDataSync(request.save_data);
+            if (result) {
+                chrome.runtime.sendMessage({ refresh_data: true });
+            }
+            sendResponse({
+                status: result
+            });
+        })();
     } else if (request.clear_data) {
-        if (request.item) {
-            fetchData(function (dataObject: object) {
-                const pageUrl: string = request.item['url'];
+        const snippet = request.snippet;
+        if (snippet) {
+            fetchData((dataObject: object) => {
+                const pageUrl: string = snippet['url'];
                 let snnipetObjectList: object[] = dataObject[pageUrl];
                 if (snnipetObjectList) {
                     snnipetObjectList.forEach(snnipetObject => {
-                        if (snnipetObject.timestamp === request.item['timestamp']) {
+                        if (snnipetObject.timestamp === snippet['timestamp']) {
                             snnipetObjectList.splice(snnipetObjectList.indexOf(snnipetObject), 1);
                         }
                     });
                 }
-                dataObject[request.item['url']] = snnipetObjectList;
+                dataObject[snippet['url']] = snnipetObjectList;
                 chrome.storage.local.set({ text_list: dataObject });
                 sendResponse({
                     status: 'success'
@@ -59,13 +63,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             });
         } else {
             chrome.storage.local.remove(KEY_TEXT_LIST);
+            sendResponse({
+                status: 'success'
+            });
         }
     } else if (request.update_data) {
-        updateData(request.update_data);
-        sendResponse({
-            status: 'success'
-        });
+        (async () => {
+            const result = await updateDataSync(request.update_data);
+            sendResponse({
+                status: result
+            });
+        })();
     }
+    return true;
 });
 
 function fetchData(postFunctionCallback: (snnipetObject: object) => void) {
@@ -77,47 +87,62 @@ function fetchData(postFunctionCallback: (snnipetObject: object) => void) {
     });
 }
 
-// {'www.baidu.com': [{}{}]}
-function saveData(snippet: SnnipetObject) {
-    // 保存选中的文本内容到本地缓存
-    chrome.storage.local.get([KEY_TEXT_LIST], result => {
-        let dataObject: object = result[KEY_TEXT_LIST];
-        if (dataObject !== undefined) {
-            let snippetList: object[] = dataObject[snippet.url];
-            if (snippetList === undefined) {
-                snippetList = [];
+
+const readAllLocalStorage = async () => { 
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get([KEY_TEXT_LIST], result => {
+            let dataObject: object = result[KEY_TEXT_LIST];
+            if (dataObject !== undefined) {
+                resolve(result[KEY_TEXT_LIST]);
+            } else { 
+                resolve(undefined);
             }
-            snippetList.push(snippet);
-            dataObject[snippet.url] = snippetList;
-        } else {
-            dataObject = {};
-            let snippetList: object[] = [snippet];
-            dataObject[snippet.url] = snippetList;
-        }
+         })
+    });
+}
+
+const saveToLocalStorage = async (dataObject: Snippet) => { 
+    return new Promise((resolve, reject) => {
         chrome.storage.local.set({ text_list: dataObject }).then(function () {
-            chrome.runtime.sendMessage({ refresh_data: true });
+            resolve(true);
+        }).catch(function (err) {
+            console.log('Faield to save data to local storage', err);
+            resolve(false)
         });
     });
 }
 
-function updateData(snippet: SnnipetObject) {
-    chrome.storage.local.get([KEY_TEXT_LIST], result => {
-        let dataObject: object = result[KEY_TEXT_LIST];
-        if (dataObject !== undefined) {
-            let snippetList: object[] = dataObject[snippet.url];
-            // 更新组内每个snippet的title
-            if (snippetList !== undefined) {
-                snippetList.forEach(function (item: object) {
-                    item.title = snippet.title;
-                    if (item.timestamp === snippet.timestamp) { 
-                        item.input_text = snippet.input_text;
-                    }
-                });
-            }
+async function saveDataSync(snippet: SnnipetObject) {
+    let dataObject = await readAllLocalStorage();
+    if (dataObject !== undefined) {
+        let snippetList: object[] = dataObject[snippet.url];
+        if (snippetList === undefined) {
+            snippetList = [];
         }
-        chrome.storage.local.set({ text_list: dataObject }).then(function () {
-            // console.log('update data!');
-            // chrome.runtime.sendMessage({ refresh_data: true });
-        });
-    });
+        snippetList.push(snippet);
+        dataObject[snippet.url] = snippetList;
+    } else {
+        dataObject = {};
+        let snippetList: object[] = [snippet];
+        dataObject[snippet.url] = snippetList;
+    }
+    return await saveToLocalStorage(dataObject);
+}
+
+async function updateDataSync(snippet: SnnipetObject) { 
+    let dataObject = await readAllLocalStorage();
+    if (dataObject !== undefined) {
+        let snippetList: object[] = dataObject[snippet.url];
+        // 更新组内每个snippet的字段
+        if (snippetList !== undefined) {
+            snippetList.forEach(function (item: object) {
+                item.title = snippet.title;
+                // timestamp相当于snippet的唯一标识符
+                if (item.timestamp === snippet.timestamp) {
+                    item.input_text = snippet.input_text;
+                }
+            });
+        }
+    }
+    return await saveToLocalStorage(dataObject);
 }
