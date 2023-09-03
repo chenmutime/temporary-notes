@@ -10,10 +10,16 @@ const iframe = new DOMParser().parseFromString(
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (iframe && request.execute_iframe) {
-    document.body?.contains(iframe) ? hideIframe() : showIframe()
+    if (document.body?.contains(iframe)) {
+      console.log('close iframe')
+      hideIframe()
+    } else {
+      console.log('open iframe')
+      showIframe()
+    }
   } else if (request.copy_data) {
     navigator.clipboard.writeText(request.copy_data)
-  } else if (request.close_sidebar) { 
+  } else if (request.close_sidebar) {
     hideIframe()
   } else if (request.copy_email) {
     navigator.clipboard.writeText(request.copy_email)

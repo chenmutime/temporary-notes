@@ -74,6 +74,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 status: result
             });
         })();
+    } else if (request.save_template) { 
+        (async () => {
+            const result = await saveTemplate(request.save_template);
+            sendResponse({
+                status: result
+            });
+        })();
     }
     return true;
 });
@@ -87,6 +94,15 @@ function fetchData(postFunctionCallback: (snnipetObject: object) => void) {
     });
 }
 
+const saveTemplate = async (templateContent: string) => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.set({ template: templateContent }).then(function () {
+            resolve(true);
+        }).catch(function (err) {
+            resolve(false)
+        });
+    });
+}
 
 const readAllLocalStorage = async () => { 
     return new Promise((resolve, reject) => {

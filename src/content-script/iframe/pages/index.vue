@@ -20,8 +20,7 @@
                     <ElButton :icon="Setting" size="normal" circle />
                     <template #dropdown>
                         <el-dropdown-menu class="bg-gray-200">
-                            <RouterLink to="/template"><el-dropdown-item :icon="Tools">Customize Template</el-dropdown-item>
-                            </RouterLink>
+                            <el-dropdown-item :icon="Tools" @click="showTemplateModal">Customize Template</el-dropdown-item>
                             <el-dropdown-item :icon="CopyDocument" @click="copyEmail()">Feedback</el-dropdown-item>
                             <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close
                                 Sidebar</el-dropdown-item>
@@ -31,7 +30,7 @@
             </div>
         </div>
     </header>
-            <div class="border-b border-1 border-gray-300"></div>
+    <div class="border-b border-1 border-gray-300"></div>
     <main>
         <view v-for="(snippetList, index) in contentContainer.contentList" :key="index">
             <view v-if="snippetList.length > 0">
@@ -68,9 +67,9 @@
                                 </div>
                                 <!-- 用于编辑文本 -->
                                 <textarea :id="'editable_inputText_' + index + sIndex" hidden
-                                    @input="autoResize(index, sIndex)"
+                                    @input="autoResize('editable_inputText_' + index + sIndex)"
                                     class="mt-1 text-sm bg-transparent w-full resize-none border-none outline-0 focus:outline-none focus:shadow-outline text-gray-700 text-left break-words p-0"
-                                    :value="snippet.input_text" ></textarea>
+                                    :value="snippet.input_text"></textarea>
                             </div>
                             <div class="flex justify-end items-end m-1 ">
                                 <!-- 进入编辑状态时展示 -->
@@ -100,10 +99,25 @@
             </div>
         </view>
     </main>
-        <!-- <el-footer class="fixed bottom-0 w-full h-12 bg-slate-300 text-left items-center ">
-      <p>Email address: chenmutime@outlook.com</p>
-      <p>We look forward to receiving your feedback.</p>
-    </el-footer> -->
+
+    <div id="templateModal" class="flex fixed inset-0 items-center justify-center bg-gray-300 bg-opacity-75 hidden">
+        <!-- 模态框内容 -->
+        <div class="bg-white rounded-lg">
+            <textarea id="templateTextarea" v-model="templateContent"
+                class=" mt-1 text-sm bg-transparent w-full resize-none focus:shadow-outline text-gray-700 text-left break-words p-0"
+                @input="autoResize('templateTextarea')"></textarea>
+            <div class="flex justify-end mr-4">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2 rounded"
+                    @click="saveCustomTemplate">
+                    提交
+                </button>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                    @click="hideTemplateModal">
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -123,6 +137,7 @@ import {
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
+let templateContent: string = '';
 let contentContainer = reactive({ contentList: [] });
 localFetchData();
 
@@ -130,7 +145,7 @@ function localFetchData() {
     chrome.storage.local.get([KEY_TEXT_LIST]).then((result) => {
         // reset contentContainer.contentList
         contentContainer.contentList = [];
-        
+
         if (result !== undefined && result[KEY_TEXT_LIST] !== undefined) {
             let dataObject: object = result[KEY_TEXT_LIST];
             Object.keys(dataObject).forEach(url => {
@@ -138,6 +153,13 @@ function localFetchData() {
                 contentContainer.contentList.push(snippetList);
             });
 
+        }
+    });
+
+    // 抓取模板
+    chrome.storage.local.get(["template"]).then((result) => {
+        if (result !== undefined && result["template"] !== undefined) {
+            templateContent = result["template"];
         }
     });
 }
@@ -189,8 +211,8 @@ function editInputText(index: number, sIndex: number) {
     }
 }
 
-function autoResize(index: number, sIndex: number) {
-    const textareaNode = document.getElementById('editable_inputText_' + index + sIndex);
+function autoResize(textareaNodeId: string) {
+    const textareaNode = document.getElementById(textareaNodeId);
     if (textareaNode !== null) {
         textareaNode.style.height = "auto";
         textareaNode.style.height = textareaNode.scrollHeight + "px";
@@ -204,7 +226,7 @@ function saveInputText(index: number, sIndex: number) {
 
         // 获取inputTextNode的value
         let newText = textareaNode.value;
-        
+
         // TODO 通知background.js更新newText
         let snippetList: object[] = contentContainer.contentList[index];
         if (snippetList !== undefined && snippetList.length > 0) {
@@ -219,7 +241,7 @@ function saveInputText(index: number, sIndex: number) {
                         closeNode.hidden = true;
                         editNode.hidden = false;
                     }
-                    
+
                     pNode.innerText = newText;
                     textareaNode.hidden = true;
                     pNode.hidden = false;
@@ -360,6 +382,32 @@ function closeSideBar() {
     });
 }
 
+const showTemplateModal = () => {
+    var modal = document.getElementById("templateModal");
+    modal.classList.remove("hidden");
+}
+
+const hideTemplateModal = () => {
+    var modal = document.getElementById("templateModal");
+    modal.classList.add("hidden");
+}
+
+const saveCustomTemplate = () => {
+    const templateTextarea = document.getElementById('templateTextarea');
+    if (templateTextarea !== null) {
+        console.log('模板内容：' + templateTextarea.value);
+        // TODO 将新的模板发送到localstrage
+        chrome.runtime.sendMessage({ save_template: templateTextarea.value }, (res) => {
+            if (res.status) {
+                ElMessage({
+                    message: 'Template saved!',
+                    type: 'success'
+                });
+            }
+        });
+    }
+    hideTemplateModal()
+}
 
 const bg_color_arr: string[] = ["bg-green-50", "bg-yellow-50", "bg-red-50", "bg-lime-50", "bg-violet-50"];
 const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-100", "bg-lime-100", "bg-violet-100"];
@@ -369,4 +417,5 @@ const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-1
 <style>
 @tailwind base;
 @tailwind components;
-@tailwind utilities;</style>
+@tailwind utilities;
+</style>
