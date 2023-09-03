@@ -70,7 +70,7 @@
                                 <textarea :id="'editable_inputText_' + index + sIndex" hidden
                                     @input="autoResize(index, sIndex)"
                                     class="mt-1 text-sm bg-transparent w-full resize-none border-none outline-0 focus:outline-none focus:shadow-outline text-gray-700 text-left break-words p-0"
-                                    :value="snippet.input_text" />
+                                    :value="snippet.input_text" ></textarea>
                             </div>
                             <div class="flex justify-end items-end m-1 ">
                                 <!-- 进入编辑状态时展示 -->
@@ -100,6 +100,10 @@
             </div>
         </view>
     </main>
+        <!-- <el-footer class="fixed bottom-0 w-full h-12 bg-slate-300 text-left items-center ">
+      <p>Email address: chenmutime@outlook.com</p>
+      <p>We look forward to receiving your feedback.</p>
+    </el-footer> -->
 </template>
 
 <script setup lang="ts">
