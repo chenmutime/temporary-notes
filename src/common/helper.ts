@@ -18,33 +18,29 @@ export function clipSelectedText(selectedText: string): string {
 // the key of storage data in local
 export const KEY_TEXT_LIST = 'text_list';
 
-export const INIT_TEMPLATE_CONTENT = '[url]\n<[group_name]>\n\n >>> [snippet]\n\n >>> [note]';
+export const DEFAULT_TEMPLATE_CONTENT = '## Group name: [group_name]\n### [url]\n> snippet: [snippet]\n\n> note: [note]';
 
-export function formatDataToText(contentList: object[]) {
-    let formattedText = "";
+function formatSnippetText(title: string = 'N/A',url: string, snippet: string, note: string = 'N/A', templateContent: string = DEFAULT_TEMPLATE_CONTENT): string {
+    const formattedText = templateContent;
+    return formattedText
+        .replaceAll('[group_name]', title)
+        .replaceAll('[url]', url)
+        .replaceAll('[snippet]', snippet)
+        .replaceAll('[note]', note)
+        ;
+}
+
+export function formatDataToText(contentList: object[], templateContent: string) {
+    let formattedText = '\n';
 
     contentList.forEach(content => {
         let snippetList: object[] = content;
-        if (snippetList.length > 0) {
-            let title: string = snippetList[0].title;
-            formattedText += '>>> ' + title;
-        }
         snippetList.forEach(snippet => {
-            let selectedText: string = snippet.selected_text;
-            let inputText: string = snippet.input_text;
-
-            let tmpObject: string = "";
-            tmpObject += "\n";
-            tmpObject += selectedText;
-            if (inputText !== undefined && inputText !== "") {
-                tmpObject += "\n";
-                tmpObject += inputText;
-            }
-            tmpObject += "\n";
-
-            formattedText += tmpObject;
+            let title: string = snippet.url === snippet.title? 'N/A' : snippet.title;
+            formattedText += formatSnippetText(title, snippet.url, snippet.selected_text, snippet.input_text, templateContent) + '\n\n';
         });
-        formattedText += "\n\n";
+
+        formattedText += "\n";
     });
 
     return formattedText;

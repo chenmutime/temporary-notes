@@ -115,7 +115,7 @@
             </div>
             <el-text>Your template: </el-text>
             <textarea id="templateTextarea" :value="templateContent"
-                class="h-52 text-sm bg-transparent w-full resize-none text-gray-700 text-left break-words p-0"></textarea>
+                class="h-56 text-sm bg-transparent w-full resize-none text-gray-700 text-left break-words p-0"></textarea>
             <div class="flex justify-end mr-4">
                 <el-button class="bg-green-500" type="success" :icon="Check" size="small" circle
                     @click="saveCustomTemplate" />
@@ -168,6 +168,7 @@ function localFetchData() {
         }
     });
 }
+
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.refresh_data) {
@@ -313,8 +314,7 @@ function copyData() {
     if (contentContainer.contentList.length === 0) {
         return;
     }
-
-    let data: string = formatDataToText(contentContainer.contentList);
+    let data: string = formatDataToText(contentContainer.contentList, templateContent.value);
     // 通知content-script复制数据到剪贴板
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 
@@ -370,13 +370,15 @@ const hideTemplateModal = () => {
 const saveCustomTemplate = () => {
     const templateTextarea = document.getElementById('templateTextarea');
     if (templateTextarea !== null) {
-        console.log('模板内容：' + templateTextarea.value);
+        templateContent.value = templateTextarea.value;
         // TODO 将新的模板发送到localstrage
         chrome.runtime.sendMessage({ save_template: templateTextarea.value }, (res) => {
             if (res.status) {
                 ElMessage({
                     message: 'Template saved!',
-                    type: 'success'
+                    type: 'success',
+                    offset: 48,
+                    duration: 1000
                 });
             }
         });

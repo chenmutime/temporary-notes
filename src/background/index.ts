@@ -1,4 +1,4 @@
-import { KEY_TEXT_LIST, INIT_TEMPLATE_CONTENT } from '../common/helper'
+import { KEY_TEXT_LIST, DEFAULT_TEMPLATE_CONTENT } from '../common/helper'
 import { SnnipetObject } from '../common/SnippetObject'
 
 export { }
@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
         "contexts": ["selection"]
     });
 
-    const t = saveTemplate(INIT_TEMPLATE_CONTENT);
+    const t = saveTemplate(DEFAULT_TEMPLATE_CONTENT);
     t.then(res => {
         console.log(res);
     });
