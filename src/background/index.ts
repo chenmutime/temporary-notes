@@ -1,4 +1,4 @@
-import { KEY_TEXT_LIST } from '../common/helper'
+import { KEY_TEXT_LIST, INIT_TEMPLATE_CONTENT } from '../common/helper'
 import { SnnipetObject } from '../common/SnippetObject'
 
 export { }
@@ -10,11 +10,18 @@ chrome.runtime.onInstalled.addListener(() => {
         "title": "Quick Record",
         "contexts": ["selection"]
     });
+
+    const t = saveTemplate(INIT_TEMPLATE_CONTENT);
+    t.then(res => {
+        console.log(res);
+    });
 });
 
 // 监听logo点击事件，通知content-script打开/关闭sidebar
 chrome.action.onClicked.addListener((tab) => {
+    console.log('logo clicked');
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        console.log('open sidebar');
         chrome.tabs.sendMessage(tabs[0].id, { execute_iframe: "true", url: tabs[0].url });
     });
 });

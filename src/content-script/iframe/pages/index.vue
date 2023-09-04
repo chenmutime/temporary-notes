@@ -101,28 +101,33 @@
     </main>
 
     <div id="templateModal" class="flex fixed inset-0 items-center justify-center bg-gray-300 bg-opacity-75 hidden">
-        <!-- 模态框内容 -->
-        <div class="bg-white rounded-lg">
-            <textarea id="templateTextarea" v-model="templateContent"
-                class=" mt-1 text-sm bg-transparent w-full resize-none focus:shadow-outline text-gray-700 text-left break-words p-0"
-                @input="autoResize('templateTextarea')"></textarea>
+        <div class="w-72 bg-white rounded-lg p-4">
+            <div class="bg-slate-100 justify-start items-start text-left mb-4">
+                <el-text size="large">Placeholder description</el-text>
+                <br>
+                <el-text tag="b">[url]: </el-text>The source address of the content
+                <br>
+                <el-text tag="b">[group_name]: </el-text>User-defined group name
+                <br>
+                <el-text tag="b">[snippet]: </el-text>Extracted text
+                <br>
+                <el-text tag="b">[note]: </el-text>Your notes
+            </div>
+            <el-text>Your template: </el-text>
+            <textarea id="templateTextarea" :value="templateContent"
+                class="h-52 text-sm bg-transparent w-full resize-none text-gray-700 text-left break-words p-0"></textarea>
             <div class="flex justify-end mr-4">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2 rounded"
-                    @click="saveCustomTemplate">
-                    提交
-                </button>
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-                    @click="hideTemplateModal">
-                    取消
-                </button>
+                <el-button class="bg-green-500" type="success" :icon="Check" size="small" circle
+                    @click="saveCustomTemplate" />
+                <el-button class="bg-gray-500" type="info" :icon="Close" size="small" circle @click="hideTemplateModal" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { clipSelectedText, KEY_TEXT_LIST } from '../../../common/helper'
+import { reactive, ref } from 'vue'
+import { formatDataToText, clipSelectedText, KEY_TEXT_LIST } from '../../../common/helper'
 import {
     Delete,
     Edit,
@@ -137,7 +142,7 @@ import {
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
-let templateContent: string = '';
+let templateContent = ref('');
 let contentContainer = reactive({ contentList: [] });
 localFetchData();
 
@@ -159,7 +164,7 @@ function localFetchData() {
     // 抓取模板
     chrome.storage.local.get(["template"]).then((result) => {
         if (result !== undefined && result["template"] !== undefined) {
-            templateContent = result["template"];
+            templateContent.value = result["template"];
         }
     });
 }
@@ -341,36 +346,6 @@ function copyEmail() {
     });
 }
 
-function formatDataToText(contentList: object[]) {
-    let formattedText = "";
-
-    contentList.forEach(content => {
-        let snippetList: object[] = content;
-        if (snippetList.length > 0) {
-            let title: string = snippetList[0].title;
-            formattedText += '>>> ' + title;
-        }
-        snippetList.forEach(snippet => {
-            let selectedText: string = snippet.selected_text;
-            let inputText: string = snippet.input_text;
-
-            let tmpObject: string = "";
-            tmpObject += "\n";
-            tmpObject += selectedText;
-            if (inputText !== undefined && inputText !== "") {
-                tmpObject += "\n";
-                tmpObject += inputText;
-            }
-            tmpObject += "\n";
-
-            formattedText += tmpObject;
-        });
-        formattedText += "\n\n";
-    });
-
-    return formattedText;
-}
-
 // send message to content-script
 function closeSideBar() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -411,6 +386,7 @@ const saveCustomTemplate = () => {
 
 const bg_color_arr: string[] = ["bg-green-50", "bg-yellow-50", "bg-red-50", "bg-lime-50", "bg-violet-50"];
 const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-100", "bg-lime-100", "bg-violet-100"];
+
 
 </script>
 
