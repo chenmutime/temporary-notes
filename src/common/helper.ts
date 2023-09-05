@@ -26,8 +26,15 @@ function formatSnippetText(title: string = 'N/A',url: string, snippet: string, n
         .replaceAll('[group_name]', title)
         .replaceAll('[url]', url)
         .replaceAll('[snippet]', snippet)
-        .replaceAll('[note]', note)
+        .replaceAll('[note]', formatNoteText(note))
         ;
+}
+
+function formatNoteText(note: string) {
+    if (note === 'N/A') {
+        return '';
+    }
+    return note.replaceAll('\n','\n > ');
 }
 
 export function formatDataToText(contentList: object[], templateContent: string) {
