@@ -11,10 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
         "contexts": ["selection"]
     });
 
-    const t = saveTemplate(DEFAULT_TEMPLATE_CONTENT);
-    t.then(res => {
-        console.log(res);
-    });
+    saveTemplate(DEFAULT_TEMPLATE_CONTENT);
 });
 
 chrome.action.onClicked.addListener(() => {
@@ -44,7 +41,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         (async () => {
             const result = await saveDataSync(request.save_data);
             if (result) {
-                chrome.runtime.sendMessage({ refresh_data: true });
+                await notifyRefreshData();
             }
             sendResponse({
                 status: result
@@ -131,6 +128,17 @@ const saveToLocalStorage = async (dataObject: Snippet) => {
             resolve(true);
         }).catch(function (err) {
             console.log('Faield to save data to local storage', err);
+            resolve(false)
+        });
+    });
+}
+
+const notifyRefreshData = async () => {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ refresh_data: true }).then(function () {
+            resolve(true);
+        }).catch(function (err) {
+            console.log('Faield to refresh data', err);
             resolve(false)
         });
     });
