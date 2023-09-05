@@ -39,7 +39,6 @@ onMounted(function () {
 </script>
 
 <template>
-  <!-- 定义一个面板，位于屏幕正中央 -->
   <main>
     <div class="w-full justify-center text-center items-center">
       <p class="text-gray-400 text-xm text-left m-3 h-16 break-words whitespace-pre-wrap">{{ viewSelectedText }}</p>

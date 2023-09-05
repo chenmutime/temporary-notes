@@ -18,11 +18,6 @@ const router = createRouter({
       name: 'index',
       path: '/index',
       component: () => import('./pages/index.vue')
-    },
-    {
-      name: 'template',
-      path: '/template',
-      component: () => import('./pages/template.vue')
     }
   ]
 })

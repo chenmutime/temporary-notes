@@ -18,7 +18,7 @@ export function clipSelectedText(selectedText: string): string {
 // the key of storage data in local
 export const KEY_TEXT_LIST = 'text_list';
 
-export const DEFAULT_TEMPLATE_CONTENT = '## Group name: [group_name]\n### [url]\n> snippet: [snippet]\n\n> note: [note]';
+export const DEFAULT_TEMPLATE_CONTENT = '## Group name: [group_name]\n### [url]\nsnippet:\n > [snippet]\n\n note:\n > [note]';
 
 function formatSnippetText(title: string = 'N/A',url: string, snippet: string, note: string = 'N/A', templateContent: string = DEFAULT_TEMPLATE_CONTENT): string {
     const formattedText = templateContent;
@@ -36,7 +36,7 @@ export function formatDataToText(contentList: object[], templateContent: string)
     contentList.forEach(content => {
         let snippetList: object[] = content;
         snippetList.forEach(snippet => {
-            let title: string = snippet.url === snippet.title? 'N/A' : snippet.title;
+            let title: string = snippet.url === snippet.title ? 'N/A' : snippet.title;
             formattedText += formatSnippetText(title, snippet.url, snippet.selected_text, snippet.input_text, templateContent) + '\n\n';
         });
 

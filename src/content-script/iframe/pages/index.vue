@@ -3,8 +3,8 @@
         <div class="flex w-full h-12 px-2 ">
             <!-- Button -->
             <div class="flex w-11/12 items-center">
-                <el-popconfirm width="220" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled"
-                    @confirm="clearAllData" icon-color="#626AEF" title="Are you sure about deleting all the data?">
+                <el-popconfirm width="220" confirm-button-text="OK" confirm-button-type="text" cancel-button-text="No, Thanks" :icon="InfoFilled"
+                    @confirm="clearAllData" icon-color="#626AEF" title="Are you sure to delete?">
                     <template #reference>
                         <ElButton size="small" type="danger" round class="bg-red-300" @click="showConfirmation()">clear all
                             data
@@ -37,7 +37,7 @@
                 <div class="rounded-lg overflow-hidden shadow-xl m-2 border-gray-500" :class="bg_color_arr[index % 5]">
                     <div class="flex h-10 w-full" :class="title_bg_color_arr[index % 5]">
                         <div class="flex justify-center items-center w-full">
-                            <input :id="'title_' + index" type="text"
+                            <input :id="'title_' + index" type="text" placeholder="Enter your group name"
                                 class="bg-transparent focus:bg-white text-xs border-none rounded-lg h-6 w-11/12 p-0"
                                 :value="snippetList[0].title" @focusout="saveTitle(index)">
                         </div>
@@ -116,7 +116,7 @@
             <el-text>Your template: </el-text>
             <textarea id="templateTextarea" :value="templateContent"
                 class="h-56 text-sm bg-transparent w-full resize-none text-gray-700 text-left break-words p-0"></textarea>
-            <div class="flex justify-end mr-4">
+            <div class="flex justify-end m-2">
                 <el-button class="bg-green-500" type="success" :icon="Check" size="small" circle
                     @click="saveCustomTemplate" />
                 <el-button class="bg-gray-500" type="info" :icon="Close" size="small" circle @click="hideTemplateModal" />

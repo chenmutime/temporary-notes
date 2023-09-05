@@ -17,12 +17,13 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
-// 监听logo点击事件，通知content-script打开/关闭sidebar
-chrome.action.onClicked.addListener((tab) => {
+chrome.action.onClicked.addListener(() => {
     console.log('logo clicked');
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         console.log('open sidebar');
-        chrome.tabs.sendMessage(tabs[0].id, { execute_iframe: "true", url: tabs[0].url });
+        chrome.tabs.sendMessage(tabs[0].id, { execute_iframe: "true", url: tabs[0].url }).then(res => {
+            console.log('background: ',JSON.stringify(res));
+        });
     });
 });
 
