@@ -18,7 +18,7 @@ export default defineManifest(async (env) => ({
   version_name: version,
   manifest_version: 3,
   author: 'chenmutime@outlook.com',
-  description: 'You can quickly capture text content, jot down ideas, and later copy them to the clipboard in bulk without the need to log in.',
+  description: 'You can quickly capture text content, jot down ideas, and later copy them to the clipboard in bulk.',
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
     default_title: 'Temporary Notes',
@@ -30,19 +30,18 @@ export default defineManifest(async (env) => ({
     {
       all_frames: false,
       js: ['src/content-script/index.ts'],
-      matches: ['*://*/*'],
+      matches: ['https://*/*'],
       run_at: 'document_end',
     },
   ],
-  host_permissions: ['*://*/*'],
   options_page: 'src/options/index.html',
   web_accessible_resources: [
     {
-      matches: ['*://*/*'],
+      matches: ['https://*/*'],
       resources: ['src/content-script/index.ts'],
     },
     {
-      matches: ['*://*/*'],
+      matches: ['https://*/*'],
       resources: ['src/content-script/iframe/index.html'],
     },
   ],
