@@ -3,8 +3,9 @@
         <div class="flex w-full h-12 px-2 ">
             <!-- Button -->
             <div class="flex w-11/12 items-center">
-                <el-popconfirm width="220" confirm-button-text="OK" confirm-button-type="text" cancel-button-text="No, Thanks" :icon="InfoFilled"
-                    @confirm="clearAllData" icon-color="#626AEF" title="Are you sure to delete?">
+                <el-popconfirm width="220" confirm-button-text="OK" confirm-button-type="text"
+                    cancel-button-text="No, Thanks" :icon="InfoFilled" @confirm="clearAllData" icon-color="#626AEF"
+                    title="Are you sure to delete?">
                     <template #reference>
                         <ElButton size="small" type="danger" round class="bg-red-300" @click="showConfirmation()">clear all
                             data
@@ -20,8 +21,8 @@
                     <ElButton :icon="Setting" size="normal" circle />
                     <template #dropdown>
                         <el-dropdown-menu class="bg-gray-200">
-                            <el-dropdown-item :icon="Tools" @click="showTemplateModal">Customize Template</el-dropdown-item>
-                            <el-dropdown-item :icon="CopyDocument" @click="copyEmail()">Feedback</el-dropdown-item>
+                            <el-dropdown-item :icon="Tools" @click="showTemplateModal">Select Template</el-dropdown-item>
+                            <el-dropdown-item :icon="Tools" @click="showTemplateModal">Sync Notion</el-dropdown-item>
                             <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close
                                 Sidebar</el-dropdown-item>
                         </el-dropdown-menu>
@@ -101,26 +102,40 @@
     </main>
 
     <div id="templateModal" class="flex fixed inset-0 items-center justify-center bg-gray-300 bg-opacity-75 hidden">
-        <div class="w-72 bg-white rounded-lg p-4">
-            <div class="bg-slate-100 justify-start items-start text-left mb-4">
-                <el-text size="large">Placeholder description</el-text>
-                <br>
-                <el-text tag="b">[url]: </el-text>The source address of the content
-                <br>
-                <el-text tag="b">[group_name]: </el-text>User-defined group name
-                <br>
-                <el-text tag="b">[snippet]: </el-text>Extracted text
-                <br>
-                <el-text tag="b">[note]: </el-text>Your notes
-            </div>
-            <el-text>Your template: </el-text>
-            <textarea id="templateTextarea" :value="templateContent"
-                class="h-56 text-sm bg-transparent w-full resize-none text-gray-700 text-left break-words p-0"></textarea>
-            <div class="flex justify-end m-2">
-                <el-button class="bg-green-500" type="success" :icon="Check" size="small" circle
-                    @click="saveCustomTemplate" />
-                <el-button class="bg-gray-500" type="info" :icon="Close" size="small" circle @click="hideTemplateModal" />
-            </div>
+        <div class="w-72 rounded-lg p-4">
+            <!-- <p class="my-2">Which template do you want to select?</p>
+            <div class="mb-2 flex items-center text-sm">
+                 <el-radio-group v-model="template_index" class="ml-4" type="vertical">
+                    <el-radio label="1" size="large">Markdown</el-radio>
+                    <el-radio label="2" size="large">Notion</el-radio>
+                    <el-radio label="3" size="large">Pure Text</el-radio>
+                </el-radio-group>
+            </div> -->
+
+            <el-card class="w-full">
+                <hr>
+                <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('Markdown')">
+                    <div class="w-4 mr-2">
+                        <div id="Markdown_selected"><el-icon color="red"><Select /></el-icon></div>
+                    </div>
+                    <p>Markdown</p>
+                </div>
+                <hr>
+                <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('Notion')">
+                    <div class="w-4 mr-2">
+                        <div id="Notion_selected" class="hidden"><el-icon color="red"><Select /></el-icon></div>
+                    </div>
+                    <p>Notion</p>
+                </div>
+                <hr>
+                <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('PureText')">
+                    <div class="w-4 mr-2">
+                        <div id="PureText_selected" class="hidden"><el-icon color="red"><Select /></el-icon></div>
+                    </div>
+                    <p>Pure Text</p>
+                </div>
+                <hr>
+            </el-card>
         </div>
     </div>
 </template>
@@ -386,9 +401,19 @@ const saveCustomTemplate = () => {
     hideTemplateModal()
 }
 
+const selectTemplate = (template: string) => { 
+    var elements = document.querySelectorAll('[id$="_selected"]');
+    elements.forEach(element => {
+        element.classList.add("hidden");
+        if (element.id.startsWith(template)) { 
+            element.classList.remove("hidden");
+        }
+    })
+}
+
+
 const bg_color_arr: string[] = ["bg-green-50", "bg-yellow-50", "bg-red-50", "bg-lime-50", "bg-violet-50"];
 const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-100", "bg-lime-100", "bg-violet-100"];
-
 
 </script>
 

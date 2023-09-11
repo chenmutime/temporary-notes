@@ -1,23 +1,23 @@
-import { KEY_TEXT_LIST, DEFAULT_TEMPLATE_CONTENT } from '../common/helper'
+import { KEY_TEXT_LIST } from '../common/helper'
 import { SnnipetObject } from '../common/SnippetObject'
 
 export { }
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
-    console.log("New Tab Created", tabId);
-    if (_tab.url) {
-        console.log("New Tab Created url", _tab.url);
-        (async () => {
-            const dataObject = await readAllLocalStorage();
-            if (dataObject) {
-                const snippetList: SnnipetObject[] = dataObject[_tab.url]
-                if (snippetList) {
-                    await notifyHighlight(tabId, snippetList)
-                }
-            }
-        })();
-    }
-});
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
+//     console.log("New Tab Created", tabId);
+//     if (_tab.url) {
+//         console.log("New Tab Created url", _tab.url);
+//         (async () => {
+//             const dataObject = await readAllLocalStorage();
+//             if (dataObject) {
+//                 const snippetList: SnnipetObject[] = dataObject[_tab.url]
+//                 if (snippetList) {
+//                     await notifyHighlight(tabId, snippetList)
+//                 }
+//             }
+//         })();
+//     }
+// });
 
 const notifyHighlight = async (tabId: number, snippetList: SnnipetObject[]) => {
     return new Promise((resolve, reject) => {
@@ -36,8 +36,8 @@ chrome.runtime.onInstalled.addListener(() => {
         "contexts": ["selection"]
     });
 
-    saveTemplate(DEFAULT_TEMPLATE_CONTENT);
 });
+
 
 chrome.action.onClicked.addListener(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -48,6 +48,7 @@ chrome.action.onClicked.addListener(() => {
 });
 
 chrome.contextMenus.onClicked.addListener(function (info) {
+    console.log('select text: ', info.selectionText)
     chrome.windows.create({
         type: 'popup',
         url: '/src/options/index.html?selectedText=' + info.selectionText + '&url=' + info?.pageUrl,
@@ -102,14 +103,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 status: result
             });
         })();
-    } else if (request.save_template) { 
-        (async () => {
-            const result = await saveTemplate(request.save_template);
-            sendResponse({
-                status: result
-            });
-        })();
-    }
+    } 
     return true;
 });
 
@@ -119,16 +113,6 @@ function fetchData(postFunctionCallback: (snnipetObject: object) => void) {
             let snnipetObject: object = result[KEY_TEXT_LIST];
             postFunctionCallback(snnipetObject);
         }
-    });
-}
-
-const saveTemplate = async (templateContent: string) => {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.set({ template: templateContent }).then(function () {
-            resolve(true);
-        }).catch(function (err) {
-            resolve(false)
-        });
     });
 }
 

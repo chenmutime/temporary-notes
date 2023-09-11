@@ -1,3 +1,5 @@
+import { SnnipetObject } from "./SnippetObject";
+
 function containsChinese(text: string) {
     const pattern = /[\u4e00-\u9fa5]/; // Unicode 范围：中文字符的起始值（0x4e00）到结束值（0x9fa5）
     return pattern.test(text);
@@ -19,6 +21,29 @@ export function clipSelectedText(selectedText: string): string {
 export const KEY_TEXT_LIST = 'text_list';
 
 export const DEFAULT_TEMPLATE_CONTENT = '## Group name: [group_name]\n### [url]\nsnippet:\n > [snippet]\n\n note:\n > [note]';
+
+
+function formartMarkdownText(groupName: string = '', url: string, snippetList: SnnipetObject[]) :string { 
+    let content = '';
+    if (groupName !== '') { 
+        content += '## ' + groupName + '<br>';
+        content += '### ' + url + '<br>';
+    } else {
+        content += '## ' + url + '<br>';
+    }
+    snippetList.forEach(snippet => { 
+        content += '> ' + snippet.selected_text + '<br>';
+        content += '<br>'
+        if (snippet.input_text !== '') {
+            content += '**' + snippet.input_text + '** <br>';
+        } else { 
+            content += '<br>'
+        }
+    });
+    content += '<br>';
+
+    return content;
+}
 
 function formatSnippetText(title: string = 'N/A',url: string, snippet: string, note: string = 'N/A', templateContent: string = DEFAULT_TEMPLATE_CONTENT): string {
     const formattedText = templateContent;
