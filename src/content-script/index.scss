@@ -17,6 +17,11 @@ iframe.ifram-animation-in {
   animation: slideIn 0.3s ease-in-out;
 }
 
+.highlight {
+  background-color: yellow;
+  color: #000;
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(100%);

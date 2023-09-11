@@ -3,6 +3,31 @@ import { SnnipetObject } from '../common/SnippetObject'
 
 export { }
 
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
+    console.log("New Tab Created", tabId);
+    if (_tab.url) {
+        console.log("New Tab Created url", _tab.url);
+        (async () => {
+            const dataObject = await readAllLocalStorage();
+            if (dataObject) {
+                const snippetList: SnnipetObject[] = dataObject[_tab.url]
+                if (snippetList) {
+                    await notifyHighlight(tabId, snippetList)
+                }
+            }
+        })();
+    }
+});
+
+const notifyHighlight = async (tabId: number, snippetList: SnnipetObject[]) => {
+    return new Promise((resolve, reject) => {
+        chrome.tabs.sendMessage(tabId, { highlight_snippet: snippetList }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err);
+        });
+    })
+ }
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
@@ -15,9 +40,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.action.onClicked.addListener(() => {
-    console.log('logo clicked');
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        console.log('open sidebar');
         chrome.tabs.sendMessage(tabs[0].id, { execute_iframe: "true", url: tabs[0].url }).then(res => {
             console.log('background: ',JSON.stringify(res));
         });
