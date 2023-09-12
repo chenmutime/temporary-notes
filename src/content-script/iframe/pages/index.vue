@@ -58,7 +58,10 @@
                         <!-- 清除图标，只清除html节点，并不清除实际节点 -->
                         <div class="p-2">
                             <div class="mx-1">
-                                <div class="text-gray-400 text-xs text-left break-words " v-html="snippet.selected_text"></div>
+                                <div class="flex">
+                                    <div :id="'show_selectedText_' + index + sIndex" class="text-gray-400 text-xs text-left line-clamp-5" v-html="snippet.selected_text"></div>
+                                    <div class="hover:cursor-pointer" @click="unfold(index, sIndex)"><el-icon><DCaret /></el-icon></div>
+                                </div>
                                 <!-- 用于展示文本 -->
                                 <div :id="'show_inputText_' + index + sIndex" class="mt-1">
                                     <p class="text-gray-700 text-sm text-left break-words whitespace-pre-wrap">
@@ -174,6 +177,17 @@ function localFetchData() {
             templateContent.value = result["template"];
         }
     });
+}
+
+function unfold(index: number, sIndex: number) {
+    const showSelectedText = document.getElementById('show_selectedText_' + index + sIndex)
+    if (showSelectedText !== null) {
+        if (showSelectedText.classList.contains('line-clamp-5')) {
+            showSelectedText.classList.remove('line-clamp-5')
+        } else {
+            showSelectedText.classList.add('line-clamp-5')
+        }
+    }
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
