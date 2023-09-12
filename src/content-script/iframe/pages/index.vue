@@ -58,8 +58,7 @@
                         <!-- 清除图标，只清除html节点，并不清除实际节点 -->
                         <div class="p-2">
                             <div class="mx-1">
-                                <p class="text-gray-400 text-xs text-left break-words "><cite class="whitespace-pre-wrap">{{
-                                    clipSelectedText(snippet.selected_text) }}</cite></p>
+                                <div class="text-gray-400 text-xs text-left break-words " v-html="snippet.selected_text"></div>
                                 <!-- 用于展示文本 -->
                                 <div :id="'show_inputText_' + index + sIndex" class="mt-1">
                                     <p class="text-gray-700 text-sm text-left break-words whitespace-pre-wrap">
@@ -176,7 +175,6 @@ function localFetchData() {
         }
     });
 }
-
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.refresh_data) {
