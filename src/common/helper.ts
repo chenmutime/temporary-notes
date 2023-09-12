@@ -73,5 +73,11 @@ export function formatDataToText(contentList: object[], template: string) {
 }
 
 export function formartSnippetToText(snippet: object) {
-    return snippet.url + '\n\n' + snippet.selected_text + '\n\n' + snippet.input_text;
+    return snippet.url + '\n\n' + snippet.selected_text + '\n\n' + (snippet.input_text ? snippet.input_text:'');
+}
+
+export function removeHtmlTags(html) {
+    html = html.replace(/<br>/g, '\n');
+    html = html.replace(/<p>/g, '\n');
+    return html.replace(/(<([^>]+)>)/ig, "");
 }

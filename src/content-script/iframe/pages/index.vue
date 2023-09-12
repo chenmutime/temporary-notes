@@ -139,7 +139,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { formatDataToText, formartSnippetToText, KEY_TEXT_LIST } from '../../../common/helper'
+import { formatDataToText, formartSnippetToText, removeHtmlTags, KEY_TEXT_LIST } from '../../../common/helper'
 import {
     Delete,
     Edit,
@@ -251,7 +251,7 @@ function copySingleSnippet(index: number, sIndex: number) {
     let data: string = formartSnippetToText(contentContainer.contentList[index][sIndex]);
     // 通知content-script复制数据到剪贴板（background.js处理不了）
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { copy_data: data }, function (response) {
+        chrome.tabs.sendMessage(tabs[0].id, { copy_data: removeHtmlTags(data) }, function (response) {
             ElMessage({
                 message: 'Copied!',
                 type: 'success',

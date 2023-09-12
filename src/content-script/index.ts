@@ -22,7 +22,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   } else if (request.close_sidebar) {
     hideIframe()
   } else if (request.get_selected_text) { 
-    data = getSelectedHtml();
+    data = getSelectedHtml()
+    console.log('selection: ', data)
   }
   sendResponse({
     status: 'success',
