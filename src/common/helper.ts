@@ -20,59 +20,53 @@ export function clipSelectedText(selectedText: string): string {
 // the key of storage data in local
 export const KEY_TEXT_LIST = 'text_list';
 
-export const DEFAULT_TEMPLATE_CONTENT = '## Group name: [group_name]\n### [url]\nsnippet:\n > [snippet]\n\n note:\n > [note]';
-
-
-function formartMarkdownText(groupName: string = '', url: string, snippetList: SnnipetObject[]) :string { 
+function formartMarkdownText(title: string = '', url: string, snippetList: SnnipetObject[]) :string { 
     let content = '';
-    if (groupName !== '') { 
-        content += '## ' + groupName + '<br>';
-        content += '### ' + url + '<br>';
+    if (title !== '') { 
+        content += '## ' + title + '\n';
+        content += '#### ' + url + '\n';
     } else {
-        content += '## ' + url + '<br>';
+        content += '## ' + url + '\n';
     }
     snippetList.forEach(snippet => { 
-        content += '> ' + snippet.selected_text + '<br>';
-        content += '<br>'
-        if (snippet.input_text !== '') {
-            content += '**' + snippet.input_text + '** <br>';
+        content += '> ' + snippet.selected_text + '\n';
+        content += '\n'
+        if (snippet.input_text) {
+            content += '**' + snippet.input_text + '** \n';
         } else { 
-            content += '<br>'
+            content += '\n'
         }
     });
-    content += '<br>';
+    content += '\n';
 
     return content;
 }
 
-function formatSnippetText(title: string = 'N/A',url: string, snippet: string, note: string = 'N/A', templateContent: string = DEFAULT_TEMPLATE_CONTENT): string {
-    const formattedText = templateContent;
-    return formattedText
-        .replaceAll('[group_name]', title)
-        .replaceAll('[url]', url)
-        .replaceAll('[snippet]', snippet)
-        .replaceAll('[note]', formatNoteText(note))
-        ;
-}
-
-function formatNoteText(note: string) {
-    if (note === 'N/A') {
-        return '';
-    }
-    return note.replaceAll('\n','\n > ');
-}
-
-export function formatDataToText(contentList: object[], templateContent: string) {
+export function formatDataToText(contentList: object[], template: string) {
     let formattedText = '\n';
 
     contentList.forEach(content => {
-        let snippetList: object[] = content;
-        snippetList.forEach(snippet => {
-            let title: string = snippet.url === snippet.title ? 'N/A' : snippet.title;
-            formattedText += formatSnippetText(title, snippet.url, snippet.selected_text, snippet.input_text, templateContent) + '\n\n';
-        });
+        const snippetList: object[] = content;
+        console.log('sss: ', JSON.stringify(snippetList));
+        let title: string;
+        let url: string;
+        if (snippetList.length > 0) { 
+            url = snippetList[0].url;
+            title = snippetList[0].title === url ? '' : snippetList[0].title;
 
-        formattedText += "\n";
+            if (template === 'Markdown') {
+                formattedText += formartMarkdownText(title, url, snippetList);
+            } else if (template === 'Notion') {
+
+            } else if (template === 'PlainText') {
+
+            } else { 
+                formattedText += formartMarkdownText(title, url, snippetList);
+            }
+
+            formattedText += "\n";
+        }
+
     });
 
     return formattedText;

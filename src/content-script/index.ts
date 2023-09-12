@@ -10,6 +10,7 @@ const iframe = new DOMParser().parseFromString(
 
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  let data = null;
   if (iframe && request.execute_iframe) {
     if (document.body?.contains(iframe)) {
       hideIframe()
@@ -20,13 +21,32 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     navigator.clipboard.writeText(request.copy_data)
   } else if (request.close_sidebar) {
     hideIframe()
-  } else if (request.copy_email) {
-    navigator.clipboard.writeText(request.copy_email)
+  } else if (request.get_selected_text) { 
+    data = getSelectedHtml();
   }
   sendResponse({
-    status: 'success'
+    status: 'success',
+    data: data
   })
 })
+
+function getSelectedHtml() { 
+  const selection = window.getSelection();
+  // Check if there is any selected content
+  if (selection !== null && selection.rangeCount > 0) {
+    // Retrieve the selected range
+    const range = selection.getRangeAt(0);
+    // Create a temporary div element
+    const div = document.createElement('div');
+
+    // Clone the selected range and add it to the div element
+    div.appendChild(range.cloneContents());
+
+    // Retrieve the HTML text from the div element
+    return div.innerHTML;
+  }
+  return '';
+}
 
 function showIframe() {
   if (iframe) {

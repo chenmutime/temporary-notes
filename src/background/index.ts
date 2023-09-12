@@ -1,33 +1,8 @@
 import { KEY_TEXT_LIST } from '../common/helper'
 import { SnnipetObject } from '../common/SnippetObject'
+import '../content-script/index.scss'
 
 export { }
-
-// chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
-//     console.log("New Tab Created", tabId);
-//     if (_tab.url) {
-//         console.log("New Tab Created url", _tab.url);
-//         (async () => {
-//             const dataObject = await readAllLocalStorage();
-//             if (dataObject) {
-//                 const snippetList: SnnipetObject[] = dataObject[_tab.url]
-//                 if (snippetList) {
-//                     await notifyHighlight(tabId, snippetList)
-//                 }
-//             }
-//         })();
-//     }
-// });
-
-const notifyHighlight = async (tabId: number, snippetList: SnnipetObject[]) => {
-    return new Promise((resolve, reject) => {
-        chrome.tabs.sendMessage(tabId, { highlight_snippet: snippetList }).then(res => {
-            resolve(res);
-        }).catch(err => {
-            reject(err);
-        });
-    })
- }
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
@@ -47,16 +22,30 @@ chrome.action.onClicked.addListener(() => {
     });
 });
 
+const getSelectedHtml = async () => { 
+    return new Promise((resolve, reject) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { get_selected_text: "true" }).then(res => {
+                if (res) {
+                    resolve(res.data);
+                }
+            });
+        });
+     })
+}
+
 chrome.contextMenus.onClicked.addListener(function (info) {
-    console.log('select text: ', info.selectionText)
-    chrome.windows.create({
-        type: 'popup',
-        url: '/src/options/index.html?selectedText=' + info.selectionText + '&url=' + info?.pageUrl,
-        width: 350,
-        height: 300,
-        left: 700,
-        top: 500
-    });
+    (async () => {
+        const selectedHtml = await getSelectedHtml();
+        chrome.windows.create({
+            type: 'popup',
+            url: '/src/options/index.html?selectedText=' + selectedHtml + '&url=' + info?.pageUrl,
+            width: 350,
+            height: 300,
+            left: 700,
+            top: 500
+        });
+    })();
 });
 
 // 接收来自其他js页面发送过来的消息
@@ -103,7 +92,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 status: result
             });
         })();
-    } 
+    } else if (request.select_template) {
+        chrome.storage.local.set({
+            template: request.select_template
+        });
+    }
     return true;
 });
 

@@ -103,14 +103,7 @@
 
     <div id="templateModal" class="flex fixed inset-0 items-center justify-center bg-gray-300 bg-opacity-75 hidden">
         <div class="w-72 rounded-lg p-4">
-            <!-- <p class="my-2">Which template do you want to select?</p>
-            <div class="mb-2 flex items-center text-sm">
-                 <el-radio-group v-model="template_index" class="ml-4" type="vertical">
-                    <el-radio label="1" size="large">Markdown</el-radio>
-                    <el-radio label="2" size="large">Notion</el-radio>
-                    <el-radio label="3" size="large">Pure Text</el-radio>
-                </el-radio-group>
-            </div> -->
+            <p class="my-2">Which template do you want to select?</p>
 
             <el-card class="w-full">
                 <hr>
@@ -128,11 +121,11 @@
                     <p>Notion</p>
                 </div>
                 <hr>
-                <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('PureText')">
+                <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('PlainText')">
                     <div class="w-4 mr-2">
-                        <div id="PureText_selected" class="hidden"><el-icon color="red"><Select /></el-icon></div>
+                        <div id="PlainText_selected" class="hidden"><el-icon color="red"><Select /></el-icon></div>
                     </div>
-                    <p>Pure Text</p>
+                    <p>Plain Text</p>
                 </div>
                 <hr>
             </el-card>
@@ -169,7 +162,7 @@ function localFetchData() {
         if (result !== undefined && result[KEY_TEXT_LIST] !== undefined) {
             let dataObject: object = result[KEY_TEXT_LIST];
             Object.keys(dataObject).forEach(url => {
-                let snippetList: object[] = dataObject[url];
+                let snippetList: SnnipetObject[] = dataObject[url];
                 contentContainer.contentList.push(snippetList);
             });
 
@@ -330,9 +323,8 @@ function copyData() {
         return;
     }
     let data: string = formatDataToText(contentContainer.contentList, templateContent.value);
-    // 通知content-script复制数据到剪贴板
+    // 通知content-script复制数据到剪贴板（background.js处理不了）
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-
         chrome.tabs.sendMessage(tabs[0].id, { copy_data: data }, function (response) {
             ElMessage({
                 message: 'Copied!',
@@ -344,21 +336,6 @@ function copyData() {
 
     });
 
-}
-
-function copyEmail() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-
-        chrome.tabs.sendMessage(tabs[0].id, { copy_email: 'chenmutime@outlook.com' }, function (response) {
-            ElMessage({
-                message: 'Email copied!',
-                type: 'success',
-                offset: 48,
-                duration: 2000
-            })
-        });
-
-    });
 }
 
 // send message to content-script
@@ -409,6 +386,14 @@ const selectTemplate = (template: string) => {
             element.classList.remove("hidden");
         }
     })
+    templateContent.value = template;
+    chrome.runtime.sendMessage({ select_template: template });
+}
+
+const selectTemplateByIndex = (index: number) => {
+    const template = template_arr[index];
+    selectTemplate(template);
+    hideTemplateModal();
 }
 
 
