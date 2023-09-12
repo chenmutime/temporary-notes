@@ -71,3 +71,7 @@ export function formatDataToText(contentList: object[], template: string) {
 
     return formattedText;
 }
+
+export function formartSnippetToText(snippet: object) {
+    return snippet.url + '\n\n' + snippet.selected_text + '\n\n' + snippet.input_text;
+}

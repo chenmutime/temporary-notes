@@ -75,6 +75,8 @@
                                     :value="snippet.input_text"></textarea>
                             </div>
                             <div class="flex justify-end items-end m-1 ">
+                                <!-- 复制单个文本 -->
+                                <ElButton :icon="CopyDocument" size="small" circle plain @click="copySingleSnippet(index, sIndex)"></ElButton>
                                 <!-- 进入编辑状态时展示 -->
                                 <ElButton :id="'check_btn_' + index + sIndex" hidden :icon="Check" size="small" circle plain
                                     @click="saveInputText(index, sIndex)"></ElButton>
@@ -137,7 +139,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { formatDataToText, clipSelectedText, KEY_TEXT_LIST } from '../../../common/helper'
+import { formatDataToText, formartSnippetToText, KEY_TEXT_LIST } from '../../../common/helper'
 import {
     Delete,
     Edit,
@@ -245,6 +247,21 @@ function autoResize(textareaNodeId: string) {
     }
 }
 
+function copySingleSnippet(index: number, sIndex: number) {
+    let data: string = formartSnippetToText(contentContainer.contentList[index][sIndex]);
+    // 通知content-script复制数据到剪贴板（background.js处理不了）
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { copy_data: data }, function (response) {
+            ElMessage({
+                message: 'Copied!',
+                type: 'success',
+                offset: 48,
+                duration: 1000
+            })
+        });
+    });
+}
+
 function saveInputText(index: number, sIndex: number) {
     const pNode = document.getElementById('show_inputText_' + index + sIndex);
     const textareaNode = document.getElementById('editable_inputText_' + index + sIndex);
@@ -345,7 +362,6 @@ function copyData() {
                 duration: 1000
             })
         });
-
     });
 
 }
@@ -366,29 +382,6 @@ const showTemplateModal = () => {
     modal.classList.remove("hidden");
 }
 
-const hideTemplateModal = () => {
-    var modal = document.getElementById("templateModal");
-    modal.classList.add("hidden");
-}
-
-const saveCustomTemplate = () => {
-    const templateTextarea = document.getElementById('templateTextarea');
-    if (templateTextarea !== null) {
-        templateContent.value = templateTextarea.value;
-        // TODO 将新的模板发送到localstrage
-        chrome.runtime.sendMessage({ save_template: templateTextarea.value }, (res) => {
-            if (res.status) {
-                ElMessage({
-                    message: 'Template saved!',
-                    type: 'success',
-                    offset: 48,
-                    duration: 1000
-                });
-            }
-        });
-    }
-    hideTemplateModal()
-}
 
 const selectTemplate = (template: string) => { 
     var elements = document.querySelectorAll('[id$="_selected"]');
@@ -401,13 +394,6 @@ const selectTemplate = (template: string) => {
     templateContent.value = template;
     chrome.runtime.sendMessage({ select_template: template });
 }
-
-const selectTemplateByIndex = (index: number) => {
-    const template = template_arr[index];
-    selectTemplate(template);
-    hideTemplateModal();
-}
-
 
 const bg_color_arr: string[] = ["bg-green-50", "bg-yellow-50", "bg-red-50", "bg-lime-50", "bg-violet-50"];
 const title_bg_color_arr: string[] = ["bg-green-100", "bg-yellow-100", "bg-red-100", "bg-lime-100", "bg-violet-100"];
