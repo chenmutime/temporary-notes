@@ -63,8 +63,8 @@
                                     <div class="hover:cursor-pointer" @click="unfold(index, sIndex)"><el-icon><DCaret /></el-icon></div>
                                 </div>
                                 <!-- 用于展示文本 -->
-                                <div :id="'show_inputText_' + index + sIndex" class="mt-1">
-                                    <p class="text-gray-700 text-sm text-left break-words whitespace-pre-wrap">
+                                <div class="mt-1">
+                                    <p :id="'show_inputText_' + index + sIndex" class="text-gray-700 text-sm text-left break-words whitespace-pre-wrap">
                                         {{ snippet.input_text }}
                                     </p>
                                 </div>

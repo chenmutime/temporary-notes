@@ -59,6 +59,7 @@ export function formatDataToText(contentList: object[], template: string) {
             } else if (template === 'Notion') {
 
             } else if (template === 'PlainText') {
+                // 保存纯文本的话则需要去除HTML标识符
 
             } else { 
                 formattedText += formartMarkdownText(title, url, snippetList);
