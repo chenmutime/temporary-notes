@@ -106,10 +106,9 @@
     </main>
 
     <div id="templateModal" class="flex fixed inset-0 items-center justify-center bg-gray-300 bg-opacity-75 hidden">
-        <div class="w-72 rounded-lg p-4">
-            <p class="my-2">Which template do you want to select?</p>
-
+        <div class="w-72 rounded-lg px-4">
             <el-card class="w-full">
+                <p class="w-full text-center mb-2 font-bold">Which template do you want to select ?</p>
                 <hr>
                 <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('Markdown')">
                     <div class="w-4 mr-2">
@@ -132,6 +131,7 @@
                     <p>Plain Text</p>
                 </div>
                 <hr>
+                <div class="w-full flex justify-end items-end mt-4"><ElButton circle plain :icon="CloseBold" @click="hideTemplateModal"></ElButton></div>
             </el-card>
         </div>
     </div>
@@ -151,6 +151,7 @@ import {
     Setting,
     CircleCloseFilled,
     CopyDocument,
+    CloseBold
 } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
@@ -380,6 +381,11 @@ function closeSideBar() {
 const showTemplateModal = () => {
     var modal = document.getElementById("templateModal");
     modal.classList.remove("hidden");
+}
+
+const hideTemplateModal = () => { 
+    var modal = document.getElementById("templateModal");
+    modal.classList.add("hidden");
 }
 
 
