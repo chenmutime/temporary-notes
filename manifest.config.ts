@@ -18,7 +18,7 @@ export default defineManifest(async (env) => ({
   version_name: version,
   manifest_version: 3,
   author: 'chenmutime@outlook.com',
-  description: 'You can quickly capture text content, jot down ideas, and later copy them to the clipboard in bulk.',
+  description: 'Temporarily store content snippets and batch copy them to the clipboard using the built-in text templates.',
   // key: 'ekgmcbpgglflmgcfajnglpbcbdccnnje',
   action: {
     default_title: 'Temporary Notes',
