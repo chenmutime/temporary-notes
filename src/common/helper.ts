@@ -19,6 +19,7 @@ export function clipSelectedText(selectedText: string): string {
 
 // the key of storage data in local
 export const KEY_TEXT_LIST = 'text_list';
+const DEFAULT_TEMPLATE = 'Markdown';
 
 function formartMarkdownText(title: string = '', url: string, snippetList: SnnipetObject[]) :string { 
     let content = '';
@@ -29,7 +30,7 @@ function formartMarkdownText(title: string = '', url: string, snippetList: Snnip
         content += '## ' + url + '\n';
     }
     snippetList.forEach(snippet => { 
-        content += '> ' + snippet.selected_text + '\n';
+        content += '> ' + removeHtmlTags(snippet.selected_text) + '\n';
         content += '\n'
         if (snippet.input_text) {
             content += '**' + snippet.input_text + '** \n';
@@ -42,12 +43,56 @@ function formartMarkdownText(title: string = '', url: string, snippetList: Snnip
     return content;
 }
 
-export function formatDataToText(contentList: object[], template: string) {
-    let formattedText = '\n';
+function formartMarkdownTextWithHtml(title: string = '', url: string, snippetList: SnnipetObject[]): string {
+    let content = '';
+    if (title !== '') {
+        content += '## ' + title + '\n';
+        content += '#### ' + url + '\n';
+    } else {
+        content += '## ' + url + '\n';
+    }
+    snippetList.forEach(snippet => {
+        content += '> ' + snippet.selected_text + '\n';
+        content += '\n'
+        if (snippet.input_text) {
+            content += '**' + snippet.input_text + '** \n';
+        } else {
+            content += '\n'
+        }
+    });
+    content += '\n';
 
+    return content;
+}
+
+function formartPlainText(title: string = '', url: string, snippetList: SnnipetObject[]): string {
+    let content = '';
+    if (title !== '') {
+        content += title + '\n';
+    }
+    content += url + '\n\n';
+    snippetList.forEach(snippet => {
+        content += removeHtmlTags(snippet.selected_text) + '\n';
+        content += '\n'
+        if (snippet.input_text) {
+            content += snippet.input_text + '\n';
+        } else {
+            content += '\n'
+        }
+    });
+    content += '\n';
+
+    return content;
+}
+
+export function formatDataToText(contentList: object[], template: string) {
+    if (!template) {
+        template = DEFAULT_TEMPLATE;
+    }
+
+    let formattedText = '\n';
     contentList.forEach(content => {
         const snippetList: object[] = content;
-        console.log('sss: ', JSON.stringify(snippetList));
         let title: string;
         let url: string;
         if (snippetList.length > 0) { 
@@ -56,13 +101,13 @@ export function formatDataToText(contentList: object[], template: string) {
 
             if (template === 'Markdown') {
                 formattedText += formartMarkdownText(title, url, snippetList);
-            } else if (template === 'Notion') {
-
+            } else if (template === 'MarkdownWithHTML') {
+                formattedText += formartMarkdownTextWithHtml(title, url, snippetList)
             } else if (template === 'PlainText') {
                 // 保存纯文本的话则需要去除HTML标识符
-
+                formattedText += formartPlainText(title, url, snippetList)
             } else { 
-                formattedText += formartMarkdownText(title, url, snippetList);
+                formattedText += formartPlainText(title, url, snippetList);
             }
 
             formattedText += "\n";
@@ -78,6 +123,8 @@ export function formartSnippetToText(snippet: object) {
 }
 
 export function removeHtmlTags(html) {
+    html = html.replace('<br>', '\n');
+    html = html.replace('<p>', '\n');
     html = html.replace(/<br>/g, '\n');
     html = html.replace(/<p>/g, '\n');
     return html.replace(/(<([^>]+)>)/ig, "");

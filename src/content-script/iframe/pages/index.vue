@@ -22,7 +22,6 @@
                     <template #dropdown>
                         <el-dropdown-menu class="bg-gray-200">
                             <el-dropdown-item :icon="Tools" @click="showTemplateModal">Select Template</el-dropdown-item>
-                            <el-dropdown-item :icon="Tools" @click="showTemplateModal">Sync Notion</el-dropdown-item>
                             <el-dropdown-item :icon="CircleCloseFilled" @click="closeSideBar()">Close
                                 Sidebar</el-dropdown-item>
                         </el-dropdown-menu>
@@ -108,8 +107,8 @@
     <div id="templateModal" class="flex fixed inset-0 items-center justify-center bg-gray-300 bg-opacity-75 hidden">
         <div class="w-72 rounded-lg px-4">
             <el-card class="w-full">
-                <p class="w-full text-center mb-2 font-bold">Which template do you want to select ?</p>
-                <hr>
+                <p class="w-full text-center mb-2 font-bold">Select the text template you want to export</p>
+                <div class="border-2">
                 <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('Markdown')">
                     <div class="w-4 mr-2">
                         <div id="Markdown_selected"><el-icon color="red"><Select /></el-icon></div>
@@ -117,11 +116,11 @@
                     <p>Markdown</p>
                 </div>
                 <hr>
-                <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('Notion')">
+                <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('MarkdownWithHTML')">
                     <div class="w-4 mr-2">
-                        <div id="Notion_selected" class="hidden"><el-icon color="red"><Select /></el-icon></div>
+                        <div id="MarkdownWithHTML_selected" class="hidden"><el-icon color="red"><Select /></el-icon></div>
                     </div>
-                    <p>Notion</p>
+                    <p>Markdown with HTML</p>
                 </div>
                 <hr>
                 <div class="flex p-2 hover:cursor-pointer" @click="selectTemplate('PlainText')">
@@ -130,7 +129,7 @@
                     </div>
                     <p>Plain Text</p>
                 </div>
-                <hr>
+                </div>
                 <div class="w-full flex justify-end items-end mt-4"><ElButton circle plain :icon="CloseBold" @click="hideTemplateModal"></ElButton></div>
             </el-card>
         </div>
@@ -393,7 +392,7 @@ const selectTemplate = (template: string) => {
     var elements = document.querySelectorAll('[id$="_selected"]');
     elements.forEach(element => {
         element.classList.add("hidden");
-        if (element.id.startsWith(template)) { 
+        if (element.id.substring(0, element.id.length - "_selected".length) === template) { 
             element.classList.remove("hidden");
         }
     })
