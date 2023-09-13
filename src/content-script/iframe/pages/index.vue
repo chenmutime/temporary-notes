@@ -98,7 +98,7 @@
             </view>
         </view>
         <view v-if="contentContainer.contentList.length <= 0">
-            <div class="flex flex-col items-center justify-center">
+            <div class="flex flex-col items-center justify-center" style="margin-top: 50%;">
                 <el-empty description="There are no records here yet" />
             </div>
         </view>
